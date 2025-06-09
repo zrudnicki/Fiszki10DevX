@@ -1,5 +1,5 @@
 import { defineMiddleware } from 'astro:middleware';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../db/supabase';
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { data: { session } } = await supabase.auth.getSession();

@@ -1,17 +1,21 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { AuthWrapper } from '../components/AuthWrapper';
-import { supabase } from '../lib/supabase';
+import Layout from "../layouts/Layout.astro";
+import { AuthWrapper } from "../components/AuthWrapper";
+import { supabase } from "../db/supabase";
 
 // Redirect if already logged in
-const { data: { session } } = await supabase.auth.getSession();
+const {
+  data: { session },
+} = await supabase.auth.getSession();
 if (session) {
-  return Astro.redirect('/');
+  return Astro.redirect("/");
 }
 ---
 
 <Layout title="Logowanie - 10xDevs Fiszki">
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 py-12 px-4 sm:px-6 lg:px-8">
+  <div
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 py-12 px-4 sm:px-6 lg:px-8"
+  >
     <AuthWrapper client:only="react" />
   </div>
-</Layout> 
+</Layout>
