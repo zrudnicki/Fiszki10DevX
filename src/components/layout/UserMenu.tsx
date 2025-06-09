@@ -1,4 +1,4 @@
-import { useAuth } from '../lib/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 export const UserMenu = () => {
   try {

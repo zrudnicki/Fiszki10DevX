@@ -1,6 +1,6 @@
 import { Auth as SupabaseAuth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { supabase } from "../db/supabase";
+import { supabase } from "../../db/supabase";
 import { useEffect, useState } from "react";
 
 export const Auth = () => {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Auth } from "./Auth";
-import { AuthProvider } from "../lib/AuthContext";
+import { AuthProvider } from "../../lib/AuthContext";
 
 export const AuthWrapper = () => {
   const [isMounted, setIsMounted] = useState(false);

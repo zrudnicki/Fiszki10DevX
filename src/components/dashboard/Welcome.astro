@@ -1,3 +1,7 @@
+---
+import { AuthButton } from "./AuthButton";
+---
+
 <div
   class="relative w-full mx-auto min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 p-4 sm:p-8"
 >
@@ -93,12 +97,7 @@
               <span class="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">Settings</span>
               <span class="text-blue-100/90">Ustawienia konta</span>
             </a>
-            <button
-              class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors w-full text-left"
-            >
-              <span class="font-mono bg-red-900/50 px-3 py-1.5 rounded-lg text-red-200 shadow-sm">Logout</span>
-              <span class="text-red-100/90">Wyloguj się</span>
-            </button>
+            <AuthButton client:only="react" />
           </div>
         </div>
       </div>
