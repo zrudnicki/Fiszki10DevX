@@ -239,22 +239,3 @@ CREATE TRIGGER update_generation_stats_updated_at
     BEFORE UPDATE ON flashcard_generation_stats
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at();
-
--- Create function for automatically ending inactive study sessions
-CREATE OR REPLACE FUNCTION auto_end_inactive_sessions()
-RETURNS trigger AS $$
-BEGIN
-    UPDATE study_sessions
-    SET status = 'abandoned',
-        ended_at = now()
-    WHERE status = 'active'
-        AND started_at < now() - INTERVAL '30 minutes';
-    RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
--- Create trigger for automatically ending inactive sessions
-CREATE TRIGGER end_inactive_sessions
-    AFTER INSERT OR UPDATE ON study_sessions
-    FOR EACH STATEMENT
-    EXECUTE FUNCTION auto_end_inactive_sessions();

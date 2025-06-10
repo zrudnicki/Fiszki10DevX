@@ -313,7 +313,6 @@ The API is organized around the following main resources mapped to database enti
     {
       "id": "uuid",
       "name": "Verbs",
-      "description": "Action words",
       "flashcard_count": 15
     }
   ]
@@ -325,8 +324,7 @@ The API is organized around the following main resources mapped to database enti
 - **Request Body**:
 ```json
 {
-  "name": "Adjectives",
-  "description": "Descriptive words"
+  "name": "Adjectives"
 }
 ```
 - **Success Response**: `201 Created`
