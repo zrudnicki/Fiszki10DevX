@@ -141,7 +141,7 @@ export interface PaginationParams {
   limit: number;
   offset: number;
   sort: string;
-  order: 'asc' | 'desc';
+  order: "asc" | "desc";
 }
 
 export interface PaginationMeta {
@@ -178,11 +178,11 @@ export interface LearningStatsDTO {
   total_reviews: number;
   accuracy_rate: number;
   average_session_time: number;
-  reviews_by_period: Array<{
+  reviews_by_period: {
     date: string;
     count: number;
     accuracy: number;
-  }>;
+  }[];
 }
 
 export interface LearningStatsQuery {
@@ -240,4 +240,4 @@ export interface NextFlashcardDTO {
   interval_days: number;
   next_review_date: string;
   last_reviewed?: string;
-} 
+}
