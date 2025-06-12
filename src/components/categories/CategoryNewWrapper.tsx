@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { CategoriesList } from "./CategoriesList";
+import { CategoryNew } from "./CategoryNew";
 import { AuthProvider } from "../../lib/AuthContext";
 
-export const CategoriesListWrapper = () => {
+export const CategoryNewWrapper = () => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export const CategoriesListWrapper = () => {
 
   return (
     <AuthProvider>
-      <CategoriesList />
+      <CategoryNew />
     </AuthProvider>
   );
-};
+}; 

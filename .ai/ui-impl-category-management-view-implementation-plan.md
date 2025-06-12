@@ -69,5 +69,5 @@ Identyczna jak w przypadku zarządzania kolekcjami:
 5. Zaimplementować logikę w `index.astro` do pobierania i wyświetlania listy kategorii, używając nowo stworzonych komponentów.
 6. Zaimplementować logikę w `new.astro` i `[id]/edit.astro` do obsługi formularzy, analogicznie do formularzy kolekcji.
 7. Zaktualizować schemę walidacji Zod dla kategorii.
-8. Upewnić się, że wszystkie nowe strony używają `DashboardLayout` i mają linki powrotne.
+8. Upewnić się, że wszystkie nowe strony używają `Layout` i mają linki powrotne.
 9. Przetestować cały cykl CRUD dla kategorii. 

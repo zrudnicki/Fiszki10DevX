@@ -13,6 +13,11 @@ type DatabaseCategory = Database["public"]["Tables"]["categories"]["Row"];
 type DatabaseCategoryInsert = Database["public"]["Tables"]["categories"]["Insert"];
 type DatabaseCategoryUpdate = Database["public"]["Tables"]["categories"]["Update"];
 
+interface CreateCategoryDTO {
+  name: string;
+  user_id: string;
+}
+
 export class CategoriesService {
   constructor(private supabase: SupabaseClient<Database>) {}
 
@@ -27,7 +32,7 @@ export class CategoriesService {
       console.log("Counting categories with parameters:", {
         userId,
         count: "exact",
-        head: true
+        head: true,
       });
 
       const { count, error: countError } = await this.supabase
@@ -135,28 +140,11 @@ export class CategoriesService {
   /**
    * Create new category
    */
-  async createCategory(userId: string, request: CreateCategoryRequest): Promise<CategoryDTO> {
+  async createCategory(category: CreateCategoryDTO): Promise<CategoryDTO> {
     try {
-      const insertData: DatabaseCategoryInsert = {
-        user_id: userId,
-        name: request.name,
-      };
+      const { data, error } = await this.supabase.from("categories").insert([category]).select().single();
 
-      console.log("Attempting to insert category:", insertData);
-      console.log("Using user ID:", userId);
-
-      const { data, error } = await this.supabase.from("categories").insert(insertData).select().single();
-
-      if (error) {
-        console.error("Supabase insert error:", error);
-        console.error("Error details:", {
-          code: error.code,
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-        });
-        throw new Error(`Failed to create category: ${error.message}`);
-      }
+      if (error) throw error;
 
       return {
         id: data.id,
@@ -166,8 +154,8 @@ export class CategoriesService {
         updated_at: data.updated_at,
       };
     } catch (error) {
-      console.error("CategoriesService.createCategory error:", error);
-      throw error;
+      console.error("Failed to create category:", error);
+      throw new Error("Failed to create category");
     }
   }
 
