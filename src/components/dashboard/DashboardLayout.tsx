@@ -1,7 +1,7 @@
 import { AuthProvider } from "../../lib/AuthContext";
 import { AuthButton } from "../auth/AuthButton";
 
-export const DashboardLayout = () => {
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthProvider>
       <div className="relative w-full mx-auto min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 p-4 sm:p-8">
@@ -12,8 +12,13 @@ export const DashboardLayout = () => {
                 Fiszki
               </h1>
               <p className="text-xl text-blue-100/90 drop-shadow-md">
-                Twój osobisty asystent do nauki z wykorzystaniem AI
+                Twój osobisty asystent do nauki z wykorzystaniem AI ee
               </p>
+            </div>
+
+            {/* Main content area */}
+            <div className="mt-8">
+              {children}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
@@ -65,6 +70,15 @@ export const DashboardLayout = () => {
                       Collections
                     </span>
                     <span className="text-blue-100/90">Zarządzaj kolekcjami</span>
+                  </a>
+                  <a
+                    href="/dashboard/categories"
+                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors"
+                  >
+                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">
+                      Collections
+                    </span>
+                    <span className="text-blue-100/90">Zarządzaj kategoriami</span>
                   </a>
                 </div>
               </div>
@@ -127,4 +141,6 @@ export const DashboardLayout = () => {
       </div>
     </AuthProvider>
   );
-}; 
+};
+
+export default DashboardLayout; 

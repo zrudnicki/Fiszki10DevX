@@ -1,0 +1,13 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { CategoriesListWrapper } from "../../../components/categories/CategoriesListWrapper";
+import { supabase } from "../../../db/supabase";
+---
+
+<Layout title="Kategorie - 10xDevs Fiszki">
+  <div
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 py-12 px-4 sm:px-6 lg:px-8"
+  >
+    <CategoriesListWrapper client:only="react" />
+  </div>
+</Layout>

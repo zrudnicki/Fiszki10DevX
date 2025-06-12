@@ -24,6 +24,12 @@ export class CategoriesService {
 
     try {
       // Get total count
+      console.log("Counting categories with parameters:", {
+        userId,
+        count: "exact",
+        head: true
+      });
+
       const { count, error: countError } = await this.supabase
         .from("categories")
         .select("*", { count: "exact", head: true })
@@ -34,6 +40,16 @@ export class CategoriesService {
       }
 
       // Get categories without flashcard count for now (to avoid relationship issues)
+      console.log("Query parameters:", {
+        userId,
+        sort,
+        order,
+        offset,
+        limit,
+        count: "exact",
+        head: true,
+      });
+
       const query = this.supabase
         .from("categories")
         .select(
@@ -231,4 +247,3 @@ export class CategoriesService {
     }
   }
 }
- 
