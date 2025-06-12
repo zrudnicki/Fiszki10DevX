@@ -47,6 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     signOut,
   };
-
+  // Return the AuthContext.Provider component with the value object containing user, loading, and signOut
+  // This makes these values available to any child components that use the useAuth hook
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

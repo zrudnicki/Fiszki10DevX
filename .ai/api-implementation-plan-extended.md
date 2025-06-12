@@ -988,8 +988,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
 ```env
 # .env
-SUPABASE_URL=https://jbxaoqwdncomzukzeiiq.supabase.co
-SUPABASE_ANON_KEY=your_anon_key
+PUBLIC_SUPABASE_URL=URL...
+PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 OPENROUTER_API_KEY=your_openrouter_key
 OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
 ```

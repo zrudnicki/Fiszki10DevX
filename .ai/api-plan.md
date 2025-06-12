@@ -594,7 +594,7 @@ The API is organized around the following main resources mapped to database enti
 - **CORS**: Configured through Supabase dashboard
 - **Rate Limiting**: Custom rate limiting for AI generation (10 requests/minute)
 - **Request Limits**: 10MB for text input, 1MB for other requests
-- **Environment Variables**: Supabase credentials via `SUPABASE_URL` and `SUPABASE_ANON_KEY`
+- **Environment Variables**: Supabase credentials via `PUBLIC_SUPABASE_URL` and `PUBLIC_SUPABASE_ANON_KEY`
 
 ## 4. Validation and Business Logic
 

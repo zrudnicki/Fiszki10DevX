@@ -1,8 +1,8 @@
 ---
-import { WelcomeWithAuth } from "../components/dashboard";
+import { DashboardLayout } from "../components/dashboard";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-  <WelcomeWithAuth client:only="react" />
+  <DashboardLayout client:only="react" />
 </Layout>

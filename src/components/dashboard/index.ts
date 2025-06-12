@@ -1,1 +1,1 @@
-export { WelcomeWithAuth } from './WelcomeWithAuth'; 
+export { DashboardLayout } from '././DashboardLayout'; 

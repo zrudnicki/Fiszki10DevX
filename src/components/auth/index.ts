@@ -1,3 +1,3 @@
-export { Auth } from './Auth';
-export { AuthButton } from './AuthButton';
-export { AuthWrapper } from './AuthWrapper'; 
+export { AuthButton } from "./AuthButton";
+export { AuthWrapper } from "./AuthWrapper";
+export { Auth } from "./Auth";

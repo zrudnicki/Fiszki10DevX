@@ -1,7 +1,7 @@
-import { AuthProvider } from '../../lib/AuthContext';
-import { AuthButton } from '../auth/AuthButton';
+import { AuthProvider } from "../../lib/AuthContext";
+import { AuthButton } from "../auth/AuthButton";
 
-export const WelcomeWithAuth = () => {
+export const DashboardLayout = () => {
   return (
     <AuthProvider>
       <div className="relative w-full mx-auto min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 p-4 sm:p-8">
@@ -24,17 +24,19 @@ export const WelcomeWithAuth = () => {
                 </h2>
                 <div className="space-y-3">
                   <a
-                    href="/generate-ai"
+                    href="/dashboard/ai/generate"
                     className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors"
                   >
                     <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">AI</span>
                     <span className="text-blue-100/90">Generuj fiszki z tekstu</span>
                   </a>
                   <a
-                    href="/create-manual"
+                    href="/dashboard/flashcards/new"
                     className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors"
                   >
-                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">Manual</span>
+                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">
+                      Manual
+                    </span>
                     <span className="text-blue-100/90">Twórz fiszki ręcznie</span>
                   </a>
                 </div>
@@ -46,15 +48,22 @@ export const WelcomeWithAuth = () => {
                   Nauka
                 </h2>
                 <div className="space-y-3">
-                  <a href="/review" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors">
-                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">Review</span>
+                  <a
+                    href="/dashboard/study/session"
+                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors"
+                  >
+                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">
+                      Review
+                    </span>
                     <span className="text-blue-100/90">Rozpocznij sesję nauki</span>
                   </a>
                   <a
-                    href="/collections"
+                    href="/dashboard/collections"
                     className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors"
                   >
-                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">Collections</span>
+                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">
+                      Collections
+                    </span>
                     <span className="text-blue-100/90">Zarządzaj kolekcjami</span>
                   </a>
                 </div>
@@ -66,12 +75,22 @@ export const WelcomeWithAuth = () => {
                   Statystyki
                 </h2>
                 <div className="space-y-3">
-                  <a href="/stats" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors">
-                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">Stats</span>
+                  <a
+                    href="/dashboard/stats"
+                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors"
+                  >
+                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">
+                      Stats
+                    </span>
                     <span className="text-blue-100/90">Postępy w nauce</span>
                   </a>
-                  <a href="/ai-stats" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors">
-                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">AI Stats</span>
+                  <a
+                    href="/dashboard/ai/stats"
+                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors"
+                  >
+                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">
+                      AI Stats
+                    </span>
                     <span className="text-blue-100/90">Skuteczność AI</span>
                   </a>
                 </div>
@@ -83,8 +102,13 @@ export const WelcomeWithAuth = () => {
                   Konto
                 </h2>
                 <div className="space-y-3">
-                  <a href="/account" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors">
-                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">Settings</span>
+                  <a
+                    href="/dashboard/account"
+                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors"
+                  >
+                    <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">
+                      Settings
+                    </span>
                     <span className="text-blue-100/90">Ustawienia konta</span>
                   </a>
                   <AuthButton />
@@ -93,7 +117,7 @@ export const WelcomeWithAuth = () => {
             </div>
 
             <p className="text-sm text-center text-blue-100/70 mt-8">
-              Wszystkie dane są przetwarzane zgodnie z RODO.{' '}
+              Wszystkie dane są przetwarzane zgodnie z RODO.{" "}
               <a href="/privacy" className="underline hover:text-blue-200">
                 Polityka prywatności
               </a>
