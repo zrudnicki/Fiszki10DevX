@@ -1,0 +1,17 @@
+---
+import Layout from "../../../../layouts/Layout.astro";
+import { CategoryEditWrapper } from "@/components/categories/CategoryEditWrapper";
+
+export const prerender = false;
+
+// Get category ID from URL params
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/dashboard/categories");
+}
+---
+
+<Layout>
+  <CategoryEditWrapper client:only="react" categoryId={id} />
+</Layout>

@@ -62,7 +62,8 @@ export class CategoriesService {
           id,
           name,
           created_at,
-          updated_at
+          updated_at,
+          flashcards:flashcards(count)
         `
         )
         .eq("user_id", userId)
@@ -75,11 +76,11 @@ export class CategoriesService {
         throw new Error(`Failed to fetch categories: ${error.message}`);
       }
 
-      // Transform data to DTOs (set flashcard_count to 0 for now)
+      // Transform data to DTOs with flashcard count
       const categories: CategoryDTO[] = (data || []).map((category) => ({
         id: category.id,
         name: category.name,
-        flashcard_count: 0, // TODO: Implement flashcard counting when flashcards table is ready
+        flashcard_count: category.flashcards?.[0]?.count || 0,
         created_at: category.created_at,
         updated_at: category.updated_at,
       }));
@@ -110,7 +111,8 @@ export class CategoriesService {
           id,
           name,
           created_at,
-          updated_at
+          updated_at,
+          flashcards:flashcards(count)
         `
         )
         .eq("user_id", userId)
@@ -127,7 +129,7 @@ export class CategoriesService {
       return {
         id: data.id,
         name: data.name,
-        flashcard_count: 0, // TODO: Implement flashcard counting when flashcards table is ready
+        flashcard_count: data.flashcards?.[0]?.count || 0,
         created_at: data.created_at,
         updated_at: data.updated_at,
       };

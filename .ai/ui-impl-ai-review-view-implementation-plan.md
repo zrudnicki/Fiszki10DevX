@@ -106,4 +106,4 @@ Ten widok jest drugim i ostatnim krokiem w procesie generowania fiszek AI. Użyt
 7. Dodać obsługę przekierowania po udanej operacji.
 8. Zaimplementować logikę `disabled` dla przycisku zapisu.
 9. Dodać obsługę błędów walidacji i błędów API.
-10. Użyć `DashboardLayout` i dodać link powrotny do `/dashboard`. 
+10. Użyć `Layout` i dodać link powrotny do `/dashboard`. 
