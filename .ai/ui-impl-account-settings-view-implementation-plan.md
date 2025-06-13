@@ -9,7 +9,7 @@ Ten widok jest miejscem, gdzie użytkownik może zarządzać ustawieniami swojeg
 ## 3. Struktura komponentów
 ```
 - AccountSettingsPage.astro
-  - DashboardLayout.astro
+  - Layout.astro
     - Main
       - Header (H1 "Ustawienia konta")
       - Card (Informacje o koncie, np. email)
@@ -28,7 +28,7 @@ Ten widok jest miejscem, gdzie użytkownik może zarządzać ustawieniami swojeg
 ## 4. Szczegóły komponentów
 ### `AccountSettingsPage.astro`
 - **Opis komponentu**: Strona Astro, która wyświetla podstawowe informacje o koncie i renderuje interaktywną sekcję usuwania.
-- **Główne elementy**: `DashboardLayout`, `DeleteAccountSection`.
+- **Główne elementy**: `Layout`, `DeleteAccountSection`.
 - **Logika `---`**: Pobiera email zalogowanego użytkownika z `Astro.locals.user.email` i wyświetla go.
 
 ### `DeleteAccountSection.tsx`
@@ -72,7 +72,7 @@ Nie są wymagane żadne nowe typy.
 ## 11. Kroki implementacji
 1. Stworzyć endpoint API `src/pages/api/account/index.ts`, który będzie obsługiwał metodę `DELETE`. Logika tego endpointu musi wywołać funkcję admina Supabase do usunięcia użytkownika (`supabase.auth.admin.deleteUser(userId)`). To wymaga klucza `SERVICE_ROLE`.
 2. Stworzyć plik `src/pages/dashboard/account.astro`.
-3. Użyć na stronie `DashboardLayout` i wyświetlić email użytkownika.
+3. Użyć na stronie `Layout` i wyświetlić email użytkownika.
 4. Stworzyć komponent-wyspę `src/components/account/DeleteAccountSection.tsx`.
 5. Umieścić komponent na stronie `account.astro`.
 6. W `DeleteAccountSection.tsx` zaimplementować `Card` z przyciskiem oraz `AlertDialog` z Shadcn.

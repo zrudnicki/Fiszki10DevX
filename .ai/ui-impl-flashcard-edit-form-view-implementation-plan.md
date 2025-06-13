@@ -9,7 +9,7 @@ Ten widok pozwala na realizację historyjki użytkownika `US-003`, dając możli
 ## 3. Struktura komponentów
 ```
 - FlashcardEditPage.astro
-  - DashboardLayout.astro
+  - Layout.astro
     - Main
       - Header (H1 "Edytuj fiszkę")
       - Form (HTML <form method="POST">)
@@ -26,7 +26,7 @@ Ten widok pozwala na realizację historyjki użytkownika `US-003`, dając możli
 ## 4. Szczegóły komponentów
 ### `FlashcardEditPage.astro`
 - **Opis komponentu**: Strona Astro renderowana serwerowo, która obsługuje cały proces edycji.
-- **Główne elementy**: `DashboardLayout`, `<form method="POST">`.
+- **Główne elementy**: `Layout`, `<form method="POST">`.
 - **Logika `---`**:
   - **Dla GET**:
     1. Pobiera `id` fiszki z `Astro.params`.
@@ -70,7 +70,7 @@ Brak stanu po stronie klienta. Widok w pełni kontrolowany przez serwer (SSR).
 
 ## 11. Kroki implementacji
 1. Stworzyć plik `src/pages/dashboard/flashcards/[id]/edit.astro`.
-2. Użyć `DashboardLayout`.
+2. Użyć `Layout`.
 3. Zaimplementować formularz HTML z `method="POST"`.
 4. W `---`, zaimplementować logikę dla `GET`: pobranie danych fiszki i wypełnienie formularza.
 5. W `---`, zaimplementować logikę dla `POST`: walidacja, wywołanie serwisu, obsługa błędów i przekierowanie.

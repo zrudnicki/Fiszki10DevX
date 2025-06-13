@@ -10,7 +10,7 @@ Widok Sesji Nauki jest kluczowym elementem aplikacji, gdzie odbywa się faktyczn
 ## 3. Struktura komponentów
 ```
 - StudySessionPage.astro
-  - DashboardLayout.astro
+  - Layout.astro
     - Main
       - Header (H1 "Sesja Nauki", ew. nazwa kolekcji)
       - StudySessionForm.tsx (Astro Island, client:load)
@@ -30,7 +30,7 @@ Widok Sesji Nauki jest kluczowym elementem aplikacji, gdzie odbywa się faktyczn
 ## 4. Szczegóły komponentów
 ### `StudySessionPage.astro`
 - **Opis komponentu**: Strona Astro, która inicjuje sesję nauki.
-- **Główne elementy**: `DashboardLayout`, `StudySessionForm`.
+- **Główne elementy**: `Layout`, `StudySessionForm`.
 - **Logika `---`**:
   - Wywołuje endpoint `GET /api/study/next?limit=10` (lub odpowiedni serwis), aby pobrać listę 10 fiszek do nauki.
   - Przekazuje pobraną listę fiszek jako `prop` do `StudySessionForm`.

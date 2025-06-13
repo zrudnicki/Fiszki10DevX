@@ -10,7 +10,7 @@ Ten widok dostarcza interfejsu do tworzenia nowej kolekcji lub edytowania istnie
 ## 3. Struktura komponentów
 ```
 - CollectionFormPage.astro
-  - DashboardLayout.astro
+  - Layout.astro
     - Main
       - Header (H1 "Stwórz nową kolekcję" lub "Edytuj kolekcję")
       - Form (HTML <form>)
@@ -30,7 +30,7 @@ Ten widok dostarcza interfejsu do tworzenia nowej kolekcji lub edytowania istnie
 ## 4. Szczegóły komponentów
 ### `CollectionFormPage.astro`
 - **Opis komponentu**: Strona Astro renderowana serwerowo. Obsługuje logikę formularza, w tym pobieranie danych dla trybu edycji, przetwarzanie żądania POST oraz walidację danych.
-- **Główne elementy**: `DashboardLayout`, standardowy formularz HTML `<form method="POST">`.
+- **Główne elementy**: `Layout`, standardowy formularz HTML `<form method="POST">`.
 - **Logika `---`**:
   - **Dla GET (edycja)**: Pobiera `id` z `Astro.params`. Wywołuje `CollectionsService.getCollectionById()` do pobrania danych kolekcji i przekazania ich do formularza.
   - **Dla POST**:
@@ -92,4 +92,4 @@ Integracja odbywa się w całości po stronie serwera w `---` frontmatter strony
 7. W `[id]/edit.astro`, dodać logikę do obsługi `Astro.request.method === 'GET'`, aby pobrać dane kolekcji i wstępnie wypełnić formularz.
 8. Zmodyfikować logikę POST w `[id]/edit.astro`, aby wywoływała `updateCollection` zamiast `createCollection`.
 9. Dodać przekierowanie do `/dashboard/collections` po pomyślnej operacji w obu plikach.
-10. Upewnić się, że obie strony używają `DashboardLayout`. 
+10. Upewnić się, że obie strony używają `Layout`. 

@@ -9,7 +9,7 @@ Widok statystyk ma na celu dostarczenie użytkownikowi wglądu w jego postępy w
 ## 3. Struktura komponentów
 ```
 - StatsPage.astro
-  - DashboardLayout.astro
+  - Layout.astro
     - Main
       - Header (H1 "Twoje Statystyki")
       - Grid (Tailwind, np. grid-cols-2 lub 3)
@@ -25,7 +25,7 @@ Widok statystyk ma na celu dostarczenie użytkownikowi wglądu w jego postępy w
 ## 4. Szczegóły komponentów
 ### `StatsPage.astro`
 - **Opis komponentu**: Strona Astro renderowana serwerowo. Jej zadaniem jest pobranie wszystkich niezbędnych statystyk i przekazanie ich do komponentów prezentacyjnych.
-- **Główne elementy**: `DashboardLayout`, reużywalny komponent `StatCard`.
+- **Główne elementy**: `Layout`, reużywalny komponent `StatCard`.
 - **Logika `---`**:
   - Wywołuje `StatisticsService.getLearningStats()` aby pobrać statystyki nauki.
   - Wywołuje `StatisticsService.getGenerationStats()` aby pobrać statystyki generowania.
@@ -65,7 +65,7 @@ Jedyną interakcją jest nawigacja do tego widoku. Widok sam w sobie jest tylko 
 
 ## 11. Kroki implementacji
 1. Stworzyć plik `src/pages/dashboard/stats.astro`.
-2. Użyć na stronie `DashboardLayout`.
+2. Użyć na stronie `Layout`.
 3. Stworzyć reużywalny komponent `src/components/stats/StatCard.astro`.
 4. W `---` frontmatter strony `stats.astro`, zaimplementować pobieranie obu typów statystyk za pomocą `StatisticsService`. Należy użyć `Promise.all` do równoległego pobierania danych.
 5. Zaimplementować obsługę błędów na wypadek niepowodzenia pobierania danych.

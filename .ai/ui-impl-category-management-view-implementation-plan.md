@@ -13,14 +13,14 @@ Struktura będzie niemal identyczna jak dla kolekcji, z reużyciem layoutu i ada
 
 ### Widok listy (`/dashboard/categories`)
 - `CategoriesListPage.astro`
-  - `DashboardLayout.astro`
+  - `Layout.astro`
   - `CategoriesList.tsx` (Astro Island)
     - `Table` (Shadcn)
     - `CategoryTableRow.tsx`
 
 ### Widoki formularzy (`.../new`, `.../[id]/edit`)
 - `CategoryFormPage.astro` (można stworzyć jeden dynamiczny komponent lub dwa osobne pliki `.astro`)
-  - `DashboardLayout.astro`
+  - `Layout.astro`
   - Formularz HTML `method="POST"`
 
 ## 4. Szczegóły komponentów

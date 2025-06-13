@@ -9,7 +9,7 @@ Ten widok umożliwia użytkownikowi ręczne dodanie pojedynczej fiszki. Jest to 
 ## 3. Struktura komponentów
 ```
 - ManualFlashcardFormPage.astro
-  - DashboardLayout.astro
+  - Layout.astro
     - Main
       - Header (H1 "Stwórz nową fiszkę ręcznie")
       - Form (HTML <form method="POST">)
@@ -27,7 +27,7 @@ Ten widok umożliwia użytkownikowi ręczne dodanie pojedynczej fiszki. Jest to 
 ## 4. Szczegóły komponentów
 ### `ManualFlashcardFormPage.astro`
 - **Opis komponentu**: Strona Astro renderowana serwerowo, która obsługuje formularz tworzenia fiszki.
-- **Główne elementy**: `DashboardLayout`, `<form method="POST">`, `Input`, `Textarea`, `Select`.
+- **Główne elementy**: `Layout`, `<form method="POST">`, `Input`, `Textarea`, `Select`.
 - **Logika `---`**:
   - **Dla GET**: Pobiera listę kolekcji i kategorii użytkownika za pomocą `CollectionsService` i `CategoriesService`, aby wypełnić opcje w selektorach.
   - **Dla POST**:
@@ -79,7 +79,7 @@ Brak stanu po stronie klienta. Widok jest w pełni kontrolowany przez serwer (SS
 
 ## 11. Kroki implementacji
 1. Stworzyć plik `src/pages/dashboard/flashcards/new.astro`.
-2. Użyć `DashboardLayout`.
+2. Użyć `Layout`.
 3. Zaimplementować formularz HTML z `method="POST"`.
 4. W `---`, zaimplementować logikę dla `GET`: pobranie list kolekcji i kategorii i przekazanie ich do `select` w formularzu.
 5. W `---`, zaimplementować logikę dla `POST`: walidacja, wywołanie serwisu, obsługa błędów i przekierowanie.

@@ -1,0 +1,13 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { CollectionFormWrapper } from "@/components/collections/CollectionFormWrapper";
+
+const { id } = Astro.params;
+if (!id) {
+  return Astro.redirect("/dashboard/collections");
+}
+---
+
+<Layout title="Edytuj kolekcję">
+  <CollectionFormWrapper client:load collectionId={id} />
+</Layout>

@@ -1,16 +1,16 @@
-import type { SupabaseClient } from '../../db/supabase';
-import type { Database } from '../../db/database.types';
-import type { 
-  CollectionDTO, 
-  CreateCollectionRequest, 
+import type { SupabaseClient } from "../../db/supabase";
+import type { Database } from "../../db/database.types";
+import type {
+  CollectionDTO,
+  CreateCollectionRequest,
   UpdateCollectionRequest,
   CollectionsListResponse,
-  PaginationParams 
-} from '../../types/dto.types';
+  PaginationParams,
+} from "../../types/dto.types";
 
-type DatabaseCollection = Database['public']['Tables']['collections']['Row'];
-type DatabaseCollectionInsert = Database['public']['Tables']['collections']['Insert'];
-type DatabaseCollectionUpdate = Database['public']['Tables']['collections']['Update'];
+type DatabaseCollection = Database["public"]["Tables"]["collections"]["Row"];
+type DatabaseCollectionInsert = Database["public"]["Tables"]["collections"]["Insert"];
+type DatabaseCollectionUpdate = Database["public"]["Tables"]["collections"]["Update"];
 
 export class CollectionsService {
   constructor(private supabase: SupabaseClient<Database>) {}
@@ -18,35 +18,35 @@ export class CollectionsService {
   /**
    * Get all collections for authenticated user with pagination
    */
-  async getCollections(
-    userId: string,
-    params: PaginationParams
-  ): Promise<CollectionsListResponse> {
+  async getCollections(userId: string, params: PaginationParams): Promise<CollectionsListResponse> {
     const { limit, offset, sort, order } = params;
 
     try {
       // Get total count
       const { count, error: countError } = await this.supabase
-        .from('collections')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', userId);
+        .from("collections")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId);
 
       if (countError) {
         throw new Error(`Failed to count collections: ${countError.message}`);
       }
 
-      // Get collections without flashcard count for now (to avoid relationship issues)
+      // Get collections with flashcard count
       const query = this.supabase
-        .from('collections')
-        .select(`
+        .from("collections")
+        .select(
+          `
           id,
           name,
           description,
           created_at,
-          updated_at
-        `)
-        .eq('user_id', userId)
-        .order(sort, { ascending: order === 'asc' })
+          updated_at,
+          flashcards:flashcards(count)
+        `
+        )
+        .eq("user_id", userId)
+        .order(sort, { ascending: order === "asc" })
         .range(offset, offset + limit - 1);
 
       const { data, error } = await query;
@@ -55,12 +55,12 @@ export class CollectionsService {
         throw new Error(`Failed to fetch collections: ${error.message}`);
       }
 
-      // Transform data to DTOs (set flashcard_count to 0 for now)
-      const collections: CollectionDTO[] = (data || []).map(collection => ({
+      // Transform data to DTOs
+      const collections: CollectionDTO[] = (data || []).map((collection) => ({
         id: collection.id,
         name: collection.name,
         description: collection.description,
-        flashcard_count: 0, // TODO: Implement flashcard counting when flashcards table is ready
+        flashcard_count: collection.flashcards?.[0]?.count || 0,
         created_at: collection.created_at,
         updated_at: collection.updated_at,
       }));
@@ -74,7 +74,7 @@ export class CollectionsService {
         },
       };
     } catch (error) {
-      console.error('CollectionsService.getCollections error:', error);
+      console.error("CollectionsService.getCollections error:", error);
       throw error;
     }
   }
@@ -82,26 +82,26 @@ export class CollectionsService {
   /**
    * Get single collection by ID
    */
-  async getCollectionById(
-    userId: string, 
-    collectionId: string
-  ): Promise<CollectionDTO | null> {
+  async getCollectionById(userId: string, collectionId: string): Promise<CollectionDTO | null> {
     try {
       const { data, error } = await this.supabase
-        .from('collections')
-        .select(`
+        .from("collections")
+        .select(
+          `
           id,
           name,
           description,
           created_at,
-          updated_at
-        `)
-        .eq('user_id', userId)
-        .eq('id', collectionId)
+          updated_at,
+          flashcards:flashcards(count)
+        `
+        )
+        .eq("user_id", userId)
+        .eq("id", collectionId)
         .single();
 
       if (error) {
-        if (error.code === 'PGRST116') {
+        if (error.code === "PGRST116") {
           return null; // Collection not found
         }
         throw new Error(`Failed to fetch collection: ${error.message}`);
@@ -111,12 +111,12 @@ export class CollectionsService {
         id: data.id,
         name: data.name,
         description: data.description,
-        flashcard_count: 0, // TODO: Implement flashcard counting when flashcards table is ready
+        flashcard_count: data.flashcards?.[0]?.count || 0,
         created_at: data.created_at,
         updated_at: data.updated_at,
       };
     } catch (error) {
-      console.error('CollectionsService.getCollectionById error:', error);
+      console.error("CollectionsService.getCollectionById error:", error);
       throw error;
     }
   }
@@ -124,10 +124,7 @@ export class CollectionsService {
   /**
    * Create new collection
    */
-  async createCollection(
-    userId: string,
-    request: CreateCollectionRequest
-  ): Promise<CollectionDTO> {
+  async createCollection(userId: string, request: CreateCollectionRequest): Promise<CollectionDTO> {
     try {
       const insertData: DatabaseCollectionInsert = {
         user_id: userId,
@@ -135,22 +132,18 @@ export class CollectionsService {
         description: request.description || null,
       };
 
-      console.log('Attempting to insert collection:', insertData);
-      console.log('Using user ID:', userId);
+      console.log("Attempting to insert collection:", insertData);
+      console.log("Using user ID:", userId);
 
-      const { data, error } = await this.supabase
-        .from('collections')
-        .insert(insertData)
-        .select()
-        .single();
+      const { data, error } = await this.supabase.from("collections").insert(insertData).select().single();
 
       if (error) {
-        console.error('Supabase insert error:', error);
-        console.error('Error details:', {
+        console.error("Supabase insert error:", error);
+        console.error("Error details:", {
           code: error.code,
           message: error.message,
           details: error.details,
-          hint: error.hint
+          hint: error.hint,
         });
         throw new Error(`Failed to create collection: ${error.message}`);
       }
@@ -164,7 +157,7 @@ export class CollectionsService {
         updated_at: data.updated_at,
       };
     } catch (error) {
-      console.error('CollectionsService.createCollection error:', error);
+      console.error("CollectionsService.createCollection error:", error);
       throw error;
     }
   }
@@ -196,10 +189,10 @@ export class CollectionsService {
       }
 
       const { data, error } = await this.supabase
-        .from('collections')
+        .from("collections")
         .update(updateData)
-        .eq('user_id', userId)
-        .eq('id', collectionId)
+        .eq("user_id", userId)
+        .eq("id", collectionId)
         .select()
         .single();
 
@@ -216,7 +209,7 @@ export class CollectionsService {
         updated_at: data.updated_at,
       };
     } catch (error) {
-      console.error('CollectionsService.updateCollection error:', error);
+      console.error("CollectionsService.updateCollection error:", error);
       throw error;
     }
   }
@@ -224,10 +217,7 @@ export class CollectionsService {
   /**
    * Delete collection (sets flashcards collection_id to NULL)
    */
-  async deleteCollection(
-    userId: string,
-    collectionId: string
-  ): Promise<boolean> {
+  async deleteCollection(userId: string, collectionId: string): Promise<boolean> {
     try {
       // First check if collection exists and belongs to user
       const existing = await this.getCollectionById(userId, collectionId);
@@ -235,11 +225,7 @@ export class CollectionsService {
         return false;
       }
 
-      const { error } = await this.supabase
-        .from('collections')
-        .delete()
-        .eq('user_id', userId)
-        .eq('id', collectionId);
+      const { error } = await this.supabase.from("collections").delete().eq("user_id", userId).eq("id", collectionId);
 
       if (error) {
         throw new Error(`Failed to delete collection: ${error.message}`);
@@ -247,8 +233,8 @@ export class CollectionsService {
 
       return true;
     } catch (error) {
-      console.error('CollectionsService.deleteCollection error:', error);
+      console.error("CollectionsService.deleteCollection error:", error);
       throw error;
     }
   }
-} 
+}

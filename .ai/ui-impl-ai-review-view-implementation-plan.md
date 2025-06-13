@@ -9,7 +9,7 @@ Ten widok jest drugim i ostatnim krokiem w procesie generowania fiszek AI. Użyt
 ## 3. Struktura komponentów
 ```
 - AIReviewPage.astro
-  - DashboardLayout.astro
+  - Layout.astro
     - Main
       - Header (H1 "Zrecenzuj wygenerowane fiszki")
       - AIReviewForm.tsx (Astro Island, client:load)
@@ -30,7 +30,7 @@ Ten widok jest drugim i ostatnim krokiem w procesie generowania fiszek AI. Użyt
 ## 4. Szczegóły komponentów
 ### `AIReviewPage.astro`
 - **Opis komponentu**: Strona Astro renderowana serwerowo. Pobiera listę kandydatów fiszek oraz listę dostępnych kolekcji użytkownika.
-- **Główne elementy**: `DashboardLayout`, `AIReviewForm`.
+- **Główne elementy**: `Layout`, `AIReviewForm`.
 - **Logika `---`**:
   - Pobiera `generationId` z `Astro.params`.
   - Wywołuje API (lub logikę z tymczasowego хранилища), aby pobrać kandydatów powiązanych z `generationId`.

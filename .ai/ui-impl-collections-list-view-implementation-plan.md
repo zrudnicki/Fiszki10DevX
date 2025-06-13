@@ -9,7 +9,7 @@ Ten widok jest głównym miejscem do zarządzania kolekcjami fiszek. Użytkownik
 ## 3. Struktura komponentów
 ```
 - CollectionsListPage.astro
-  - DashboardLayout.astro
+  - Layout.astro
     - Header
     - Main
       - HeaderSekcji (H1 "Twoje Kolekcje", Button "Dodaj nową")
@@ -28,7 +28,7 @@ Ten widok jest głównym miejscem do zarządzania kolekcjami fiszek. Użytkownik
 ## 4. Szczegóły komponentów
 ### `CollectionsListPage.astro`
 - **Opis komponentu**: Strona Astro renderowana serwerowo. Odpowiada za pobranie danych o kolekcjach i warunkowe renderowanie listy lub stanu pustego.
-- **Główne elementy**: `DashboardLayout`, `CollectionsList`, `EmptyState`, `Button` (jako link `<a>`).
+- **Główne elementy**: `Layout`, `CollectionsList`, `EmptyState`, `Button` (jako link `<a>`).
 - **Propsy**: Brak.
 
 ### `CollectionsList.tsx`

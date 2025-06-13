@@ -9,7 +9,7 @@ Ten widok jest pierwszym krokiem w procesie generowania fiszek z pomocą AI. Uż
 ## 3. Struktura komponentów
 ```
 - AIGeneratePage.astro
-  - DashboardLayout.astro
+  - Layout.astro
     - Main
       - Header (H1 "Wygeneruj fiszki z tekstu", p "Wklej tekst...")
       - Form (HTML <form method="POST">)
@@ -25,7 +25,7 @@ Ten widok jest pierwszym krokiem w procesie generowania fiszek z pomocą AI. Uż
 ## 4. Szczegóły komponentów
 ### `AIGeneratePage.astro`
 - **Opis komponentu**: Strona Astro renderowana serwerowo, która zawiera formularz i obsługuje jego wysłanie.
-- **Główne elementy**: `DashboardLayout`, `<form method="POST">`, `Textarea`, `Button`.
+- **Główne elementy**: `Layout`, `<form method="POST">`, `Textarea`, `Button`.
 - **Logika `---`**:
   - **Dla POST**:
     1. Pobiera dane z `Astro.request.formData()`.
@@ -72,7 +72,7 @@ Brak stanu po stronie klienta. Stan formularza (wprowadzony tekst, błędy) jest
 
 ## 11. Kroki implementacji
 1. Stworzyć plik `src/pages/dashboard/ai/generate.astro`.
-2. Użyć `DashboardLayout`.
+2. Użyć `Layout`.
 3. Zaimplementować formularz z `Textarea` i przyciskiem "Generuj".
 4. W `---` frontmatter zaimplementować logikę dla `Astro.request.method === 'POST'`.
 5. Dodać walidację Zod dla pola tekstowego.

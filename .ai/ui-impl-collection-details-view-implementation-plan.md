@@ -9,7 +9,7 @@ Ten widok pełni rolę strony szczegółowej dla pojedynczej kolekcji. Wyświetl
 ## 3. Struktura komponentów
 ```
 - CollectionDetailsPage.astro
-  - DashboardLayout.astro
+  - Layout.astro
     - Main
       - HeaderSekcji (H1 "Nazwa Kolekcji", Button "Edytuj kolekcję")
       - p (Opis kolekcji)
@@ -26,7 +26,7 @@ Ten widok pełni rolę strony szczegółowej dla pojedynczej kolekcji. Wyświetl
 ## 4. Szczegóły komponentów
 ### `CollectionDetailsPage.astro`
 - **Opis komponentu**: Strona Astro renderowana serwerowo. Pobiera dane o kolekcji oraz listę powiązanych z nią fiszek.
-- **Główne elementy**: `DashboardLayout`, `FlashcardsList`.
+- **Główne elementy**: `Layout`, `FlashcardsList`.
 - **Logika `---`**:
   - Pobiera `id` kolekcji z `Astro.params`.
   - Wywołuje `CollectionsService.getCollectionById()` do pobrania szczegółów kolekcji.
@@ -88,5 +88,5 @@ Ten widok pełni rolę strony szczegółowej dla pojedynczej kolekcji. Wyświetl
 4. Na stronie `.astro` przekazać pobrane dane do komponentu `FlashcardsList`.
 5. Zaimplementować w komponentach React logikę tabeli, stanu lokalnego i usuwania (wraz z `AlertDialog`), analogicznie do listy kolekcji.
 6. Dodać linki do edycji kolekcji i edycji poszczególnych fiszek.
-7. Upewnić się, że strona używa `DashboardLayout`.
+7. Upewnić się, że strona używa `Layout`.
 8. Dodać obsługę paginacji dla listy fiszek, jeśli jest wymagana (przekazując meta dane paginacji i renderując komponent paginacji). 
