@@ -1,0 +1,14 @@
+---
+import Layout from "../../../../layouts/Layout.astro";
+import { FlashcardEditFormWrapper } from "../../../../components/flashcards/FlashcardEditFormWrapper";
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/dashboard");
+}
+---
+
+<Layout title="Edytuj fiszkę">
+  <FlashcardEditFormWrapper flashcardId={id} client:load />
+</Layout> 

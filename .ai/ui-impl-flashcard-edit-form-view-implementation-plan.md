@@ -1,4 +1,4 @@
-# Plan implementacji widoku Formularza Edycji Fiszki
+Tailwind# Plan implementacji widoku Formularza Edycji Fiszki
 
 ## 1. Przegląd
 Ten widok pozwala na realizację historyjki użytkownika `US-003`, dając możliwość edycji pól "front" i "back" istniejącej fiszki. Jest to standardowy formularz, który będzie wstępnie wypełniony danymi fiszki. Jego implementacja będzie bardzo podobna do formularza tworzenia kolekcji w trybie edycji.
