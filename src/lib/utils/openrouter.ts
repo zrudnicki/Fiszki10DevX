@@ -43,39 +43,40 @@ export class OpenRouterClient {
     this.apiKey = import.meta.env.OPENROUTER_API_KEY;
     this.siteUrl = import.meta.env.SITE_URL || "http://localhost:3000";
     this.siteName = import.meta.env.SITE_NAME || "Fiszki10DevX";
-
-    if (!this.apiKey) {
-      throw new Error("OPENROUTER_API_KEY environment variable is required");
-    }
   }
 
   /**
    * Generate flashcards from text using AI
    */
   async generateFlashcards(text: string, maxCards: number = 10): Promise<FlashcardCandidate[]> {
-    const systemPrompt = `You are an expert flashcard creator. Your task is to create high-quality flashcards from the provided text.
+    if (!this.isConfigured()) {
+      throw new Error("OPENROUTER_API_KEY environment variable is required");
+    }
 
-Rules:
-1. Create exactly ${maxCards} flashcards (or fewer if the text doesn't contain enough information)
-2. Each flashcard should have a FRONT (question/prompt) and BACK (answer/explanation)
-3. Front should be concise (max 200 characters)
-4. Back should be comprehensive but not too long (max 500 characters)
-5. Focus on key concepts, definitions, facts, and important details
-6. Make questions clear and unambiguous
-7. Ensure answers are accurate and complete
-8. Vary question types (definitions, explanations, examples, etc.)
+    const systemPrompt = `Jesteś ekspertem w tworzeniu fiszek. Twoim zadaniem jest tworzenie wysokiej jakości fiszek z dostarczonego tekstu.
 
-Format your response as valid JSON array with this exact structure:
+Zasady:
+1. Utwórz dokładnie ${maxCards} fiszek (lub mniej, jeśli tekst nie zawiera wystarczająco informacji)
+2. Każda fiszka powinna mieć PRZÓD (pytanie/podpowiedź) i TYŁ (odpowiedź/wyjaśnienie)
+3. Przednia strona powinna być zwięzła (max 200 znaków)
+4. Tylna strona powinna być wyczerpująca, ale nie za długa (max 500 znaków)
+5. Skup się na kluczowych koncepcjach, definicjach, faktach i ważnych szczegółach
+6. Upewnij się, że pytania są jasne i jednoznaczne
+7. Upewnij się, że odpowiedzi są dokładne i kompletne
+8. Różnicuj typy pytań (definicje, wyjaśnienia, przykłady, itp.)
+9. Wszystkie fiszki muszą być w języku polskim
+
+Sformatuj swoją odpowiedź jako prawidłową tablicę JSON z dokładnie taką strukturą:
 [
   {
-    "front": "Question or prompt here",
-    "back": "Answer or explanation here"
+    "front": "Pytanie lub podpowiedź tutaj",
+    "back": "Odpowiedź lub wyjaśnienie tutaj"
   }
 ]
 
-Do not include any text before or after the JSON array. Only return the JSON.`;
+Nie dodawaj żadnego tekstu przed lub po tablicy JSON. Zwróć tylko JSON.`;
 
-    const userPrompt = `Create flashcards from this text:\n\n${text}`;
+    const userPrompt = `Utwórz fiszki z tego tekstu:\n\n${text}`;
 
     try {
       const response = await fetch(OPENROUTER_API_URL, {

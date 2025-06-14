@@ -1,0 +1,8 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { AIGenerateFormWrapper } from "@/components/ai/AIGenerateFormWrapper";
+---
+
+<Layout title="Generuj fiszki">
+  <AIGenerateFormWrapper client:only="react" />
+</Layout> 

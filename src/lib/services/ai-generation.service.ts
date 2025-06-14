@@ -47,7 +47,7 @@ export class AIGenerationService {
     const maxRequests = 10;
 
     const userLimit = userRateLimit.get(userId);
-    
+
     if (!userLimit || now > userLimit.resetTime) {
       // Reset or create new rate limit
       userRateLimit.set(userId, { count: 1, resetTime: now + hourInMs });
@@ -100,8 +100,8 @@ export class AIGenerationService {
   private async updateGenerationStats(
     userId: string,
     generated: number,
-    acceptedDirect: number = 0,
-    acceptedEdited: number = 0
+    acceptedDirect = 0,
+    acceptedEdited = 0
   ): Promise<void> {
     try {
       // First try to get existing stats
@@ -133,14 +133,12 @@ export class AIGenerationService {
         }
       } else {
         // Create new stats record
-        const { error: insertError } = await this.supabase
-          .from("flashcard_generation_stats")
-          .insert({
-            user_id: userId,
-            total_generated: generated,
-            total_accepted_direct: acceptedDirect,
-            total_accepted_edited: acceptedEdited,
-          });
+        const { error: insertError } = await this.supabase.from("flashcard_generation_stats").insert({
+          user_id: userId,
+          total_generated: generated,
+          total_accepted_direct: acceptedDirect,
+          total_accepted_edited: acceptedEdited,
+        });
 
         if (insertError) {
           console.error("Error creating generation stats:", insertError);
@@ -166,10 +164,7 @@ export class AIGenerationService {
   /**
    * Generate flashcards from text using AI
    */
-  async generateFlashcards(
-    userId: string,
-    request: GenerateFlashcardsRequest
-  ): Promise<GenerateFlashcardsResponse> {
+  async generateFlashcards(userId: string, request: GenerateFlashcardsRequest): Promise<GenerateFlashcardsResponse> {
     try {
       // Check rate limit
       const rateCheck = this.checkRateLimit(userId);
@@ -197,10 +192,7 @@ export class AIGenerationService {
       console.log(`Generating flashcards for user ${userId}, text length: ${request.text.length}`);
 
       // Generate flashcards using OpenRouter
-      const candidates = await this.openRouter.generateFlashcards(
-        request.text,
-        request.max_cards || 10
-      );
+      const candidates = await this.openRouter.generateFlashcards(request.text, request.max_cards || 10);
 
       // Create generation session
       const generationId = crypto.randomUUID();
@@ -230,7 +222,6 @@ export class AIGenerationService {
         text_length: request.text.length,
         max_cards: request.max_cards || 10,
       };
-
     } catch (error) {
       console.error("AIGenerationService.generateFlashcards error:", error);
       throw error;
@@ -262,37 +253,25 @@ export class AIGenerationService {
         throw new Error("Generation session has expired");
       }
 
-      // Validate foreign keys (they might have changed since generation)
+      // Validate foreign keys
       const isValidCollection = await this.validateCollection(userId, request.collection_id);
       if (!isValidCollection) {
         throw new Error(`Collection not found or does not belong to user: ${request.collection_id}`);
       }
 
-      const isValidCategory = await this.validateCategory(userId, request.category_id);
-      if (!isValidCategory) {
-        throw new Error(`Category not found or does not belong to user: ${request.category_id}`);
-      }
-
-      // Prepare flashcards for bulk creation
-      const flashcardsToCreate = request.accepted_cards.map(card => ({
-        front: card.front,
-        back: card.back,
-        collection_id: request.collection_id,
-        category_id: request.category_id,
-        source: "ai_generated" as const,
-      }));
-
-      // Create flashcards in bulk
-      const result = await this.flashcardsService.createFlashcardsBulk(
-        userId,
-        { flashcards: flashcardsToCreate }
-      );
+      // Create flashcards using FlashcardsService
+      const result = await this.flashcardsService.createFlashcardsBulk(userId, {
+        flashcards: request.flashcards.map((card) => ({
+          front: card.front,
+          back: card.back,
+          collection_id: request.collection_id,
+          category_id: request.category_id,
+          source: "ai_generated" as const,
+        })),
+      });
 
       // Update statistics
-      const directCount = request.accepted_cards.filter(card => !card.edited).length;
-      const editedCount = request.accepted_cards.filter(card => card.edited).length;
-      
-      await this.updateGenerationStats(userId, 0, directCount, editedCount);
+      await this.updateGenerationStats(userId, 0, request.flashcards.length, 0);
 
       // Clean up session
       generationSessions.delete(generationId);
@@ -302,7 +281,6 @@ export class AIGenerationService {
         flashcards: result.flashcards,
         stats_updated: true,
       };
-
     } catch (error) {
       console.error("AIGenerationService.acceptFlashcards error:", error);
       throw error;
@@ -334,4 +312,4 @@ export class AIGenerationService {
 
     return { requests: userLimit.count, limit: 10, resetTime: userLimit.resetTime };
   }
-} 
+}

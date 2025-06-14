@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { CollectionsList } from "./CollectionsList";
-import { AuthProvider } from "../auth/AuthProvider";
+import { AuthProvider } from "@/lib/AuthContext";
 
-export const CollectionsListWrapper: React.FC = () => {
-  const [mounted, setMounted] = useState(false);
+interface CollectionsListWrapperProps {}
+
+export const CollectionsListWrapper: React.FC<CollectionsListWrapperProps> = () => {
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    setIsMounted(true);
   }, []);
 
-  if (!mounted) {
+  if (!isMounted) {
     return null;
   }
 

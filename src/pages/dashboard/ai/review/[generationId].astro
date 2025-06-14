@@ -1,0 +1,27 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { AIReviewFormWrapper } from "@/components/ai/AIReviewFormWrapper";
+
+const { generationId } = Astro.params;
+
+if (!generationId) {
+  return Astro.redirect("/dashboard/ai/generate");
+}
+---
+
+<Layout title="Zrecenzuj wygenerowane fiszki">
+  <main class="container mx-auto px-4 py-8" transition:animate="slide">
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-2xl font-bold text-white">Zrecenzuj wygenerowane fiszki</h1>
+      <a
+        href="/dashboard"
+        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gradient-to-r from-blue-600 to-blue-900 text-white hover:from-blue-700 hover:to-blue-950 h-10 px-4 py-2"
+        transition:name="back-button"
+      >
+        Powrót do dashboardu
+      </a>
+    </div>
+
+    <AIReviewFormWrapper generationId={generationId} client:only="react"/>
+  </main>
+</Layout>
