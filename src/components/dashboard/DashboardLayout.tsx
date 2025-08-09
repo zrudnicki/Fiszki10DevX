@@ -74,7 +74,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors"
                   >
                     <span className="font-mono bg-blue-900/50 px-3 py-1.5 rounded-lg text-blue-200 shadow-sm">
-                      Collections
+                      Categories
                     </span>
                     <span className="text-blue-100/90">Zarządzaj kategoriami</span>
                   </a>
