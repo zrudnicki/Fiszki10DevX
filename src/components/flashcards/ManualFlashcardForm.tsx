@@ -88,10 +88,18 @@ export const ManualFlashcardForm: React.FC<ManualFlashcardFormProps> = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-          <strong className="font-bold">Error: </strong>
-          <span className="block sm:inline">You must be logged in to create flashcards</span>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md">
+          <div className="bg-white/5 rounded-lg p-8 shadow-md text-center">
+            <h2 className="text-xl font-semibold mb-2 text-white">Wymagane logowanie</h2>
+            <p className="mb-6 text-gray-200">Aby generować fiszki, musisz się zalogować.</p>
+            <a
+              href="/login"
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gradient-to-r from-blue-600 to-blue-900 text-white hover:from-blue-700 hover:to-blue-950 h-10 px-4 py-2"
+            >
+              Zaloguj się
+            </a>
+          </div>
         </div>
       </div>
     );
