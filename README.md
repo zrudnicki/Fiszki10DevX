@@ -10,6 +10,10 @@ Fiszki10DevX is a modern flashcard application designed for efficient learning t
 -   **UI Components**: [Shadcn/ui](https://ui.shadcn.com/)
 -   **Backend**: [Supabase](https://supabase.com/) (Database, Auth, Storage)
 -   **Language**: [TypeScript 5](https://www.typescriptlang.org/)
+-   **Testing (Unit & Integration)**: [Vitest](https://vitest.dev/) + [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+-   **Testing (E2E)**: [Playwright](https://playwright.dev/)
+-   **API Testing**: [Supertest](https://github.com/ladjs/supertest)
+-   **API/Frontend Mocking**: [MSW](https://mswjs.io/)
 
 ## Project Structure
 
