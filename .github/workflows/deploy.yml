@@ -22,27 +22,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Run linting and type checking
         run: |
-          pnpm run lint
-          pnpm run typecheck
+          npm run lint
+          npm run typecheck
 
       - name: Build project
-        run: pnpm run build
+        run: npm run build
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
@@ -51,7 +46,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
-  
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -62,3 +57,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+  
