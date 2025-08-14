@@ -3,7 +3,7 @@ import { supabase } from "../../db/supabase";
 import type { CollectionDTO, CategoryDTO } from "../../types/dto.types";
 import { useAuth } from "../hooks/useAuth";
 
-interface ManualFlashcardFormProps {}
+type ManualFlashcardFormProps = object;
 
 export const ManualFlashcardForm: React.FC<ManualFlashcardFormProps> = () => {
   const { user, loading: authLoading } = useAuth();
@@ -120,9 +120,7 @@ export const ManualFlashcardForm: React.FC<ManualFlashcardFormProps> = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create New Flashcard
-          </h2>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create New Flashcard</h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
@@ -215,4 +213,4 @@ export const ManualFlashcardForm: React.FC<ManualFlashcardFormProps> = () => {
       </div>
     </div>
   );
-}; 
+};

@@ -31,6 +31,3 @@ describe("CategoriesList - empty state", () => {
     expect(screen.getByRole("link", { name: "Dodaj kategorię" })).toHaveAttribute("href", "/dashboard/categories/new");
   });
 });
-
-
-

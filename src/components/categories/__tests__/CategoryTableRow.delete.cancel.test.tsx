@@ -45,6 +45,3 @@ describe("CategoryTableRow delete - cancel", () => {
     expect(onDelete).not.toHaveBeenCalled();
   });
 });
-
-
-

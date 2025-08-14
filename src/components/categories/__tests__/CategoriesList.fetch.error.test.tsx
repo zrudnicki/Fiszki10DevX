@@ -23,7 +23,7 @@ describe("CategoriesList - fetch error", () => {
 
     const { CategoriesList } = await import("../CategoriesList");
 
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => void 0);
     getCategoriesMock.mockRejectedValueOnce(new Error("get failed"));
 
     render(<CategoriesList />);
@@ -35,6 +35,3 @@ describe("CategoriesList - fetch error", () => {
     expect(await screen.findByText("Brak kategorii")).toBeInTheDocument();
   });
 });
-
-
-

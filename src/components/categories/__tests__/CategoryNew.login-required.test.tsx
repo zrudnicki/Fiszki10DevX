@@ -29,6 +29,3 @@ describe("CategoryNew - login required", () => {
     expect(screen.getByRole("link", { name: "Zaloguj się" })).toHaveAttribute("href", "/login");
   });
 });
-
-
-

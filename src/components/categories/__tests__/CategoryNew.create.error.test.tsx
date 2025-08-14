@@ -53,6 +53,3 @@ describe("CategoryNew - create error", () => {
     Object.defineProperty(window, "location", { configurable: true, value: originalLocation });
   });
 });
-
-
-

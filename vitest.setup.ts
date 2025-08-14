@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom/vitest';
+import "@testing-library/jest-dom/vitest";
 
 // Example: configure MSW (optional placeholder)
 // import { setupServer } from 'msw/node';
@@ -8,5 +8,3 @@ import '@testing-library/jest-dom/vitest';
 // beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
 // afterEach(() => server.resetHandlers());
 // afterAll(() => server.close());
-
-

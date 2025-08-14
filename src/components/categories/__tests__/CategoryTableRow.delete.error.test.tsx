@@ -20,7 +20,7 @@ describe("CategoryTableRow delete - error", () => {
     const { CategoryTableRow } = await import("../CategoryTableRow");
 
     vi.spyOn(window, "confirm").mockImplementation(() => true);
-    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
+    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => void 0);
 
     const cat: CategoryDTO = {
       id: "c2",
@@ -49,6 +49,3 @@ describe("CategoryTableRow delete - error", () => {
     expect(alertSpy).toHaveBeenCalled();
   });
 });
-
-
-

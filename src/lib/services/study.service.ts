@@ -1,35 +1,38 @@
 import type { SupabaseClient } from "../../db/supabase";
 import type { Database } from "../../db/database.types";
-import type { 
-  StudySessionDTO, 
-  StartStudySessionRequest, 
+import type {
+  StudySessionDTO,
+  StartStudySessionRequest,
   ReviewFlashcardRequest,
   BatchReviewRequest,
   CompleteSessionRequest,
-  NextFlashcardDTO
+  NextFlashcardDTO,
 } from "../../types/dto.types";
-import { 
-  calculateNextReview, 
+import {
+  calculateNextReview,
   getInitialSpacedRepetitionParams,
   getCardsForReview,
   getNewCardsForLearning,
   getMixedCardsForStudy,
   getAnyAvailableCards,
-  type SpacedRepetitionParams
+  type SpacedRepetitionParams,
 } from "../utils/spaced-repetition";
 
-type DatabaseStudySession = Database['public']['Tables']['study_sessions']['Row'];
-type DatabaseStudySessionInsert = Database['public']['Tables']['study_sessions']['Insert'];
-type DatabaseStudySessionUpdate = Database['public']['Tables']['study_sessions']['Update'];
-type DatabaseFlashcard = Database['public']['Tables']['flashcards']['Row'];
-type DatabaseFlashcardUpdate = Database['public']['Tables']['flashcards']['Update'];
+type DatabaseStudySession = Database["public"]["Tables"]["study_sessions"]["Row"];
+type DatabaseStudySessionInsert = Database["public"]["Tables"]["study_sessions"]["Insert"];
+type DatabaseStudySessionUpdate = Database["public"]["Tables"]["study_sessions"]["Update"];
+type DatabaseFlashcard = Database["public"]["Tables"]["flashcards"]["Row"];
+type DatabaseFlashcardUpdate = Database["public"]["Tables"]["flashcards"]["Update"];
 
 /**
  * Study Service
  * Handles study sessions, spaced repetition, and learning progress
  */
 export class StudyService {
-  constructor(private supabase: SupabaseClient<Database>, private userId: string) {}
+  constructor(
+    private supabase: SupabaseClient<Database>,
+    private userId: string
+  ) {}
 
   /**
    * Start a new study session
@@ -38,20 +41,21 @@ export class StudyService {
     try {
       // Validate collection exists and belongs to user
       const { data: collection, error: collectionError } = await this.supabase
-        .from('collections')
-        .select('id, name')
-        .eq('id', request.collection_id)
-        .eq('user_id', this.userId)
+        .from("collections")
+        .select("id, name")
+        .eq("id", request.collection_id)
+        .eq("user_id", this.userId)
         .single();
 
       if (collectionError || !collection) {
-        throw new Error('Collection not found or access denied');
+        throw new Error("Collection not found or access denied");
       }
 
       // Get flashcards from the collection with spaced repetition data
       const { data: flashcards, error: flashcardsError } = await this.supabase
-        .from('flashcards')
-        .select(`
+        .from("flashcards")
+        .select(
+          `
           id,
           front,
           back,
@@ -61,15 +65,16 @@ export class StudyService {
           easiness_factor,
           interval,
           next_review_date
-        `)
-        .eq('collection_id', request.collection_id);
+        `
+        )
+        .eq("collection_id", request.collection_id);
 
       if (flashcardsError) {
         throw new Error(`Failed to fetch flashcards: ${flashcardsError.message}`);
       }
 
       if (!flashcards || flashcards.length === 0) {
-        throw new Error('No flashcards found in this collection');
+        throw new Error("No flashcards found in this collection");
       }
 
       // Select cards based on session type
@@ -77,13 +82,13 @@ export class StudyService {
       let selectedCards: typeof flashcards;
 
       switch (request.session_type) {
-        case 'review':
+        case "review":
           selectedCards = getCardsForReview(flashcards, maxCards);
           break;
-        case 'learn':
+        case "learn":
           selectedCards = getNewCardsForLearning(flashcards, maxCards);
           break;
-        case 'mixed':
+        case "mixed":
         default:
           selectedCards = getMixedCardsForStudy(flashcards, maxCards);
           break;
@@ -103,13 +108,13 @@ export class StudyService {
       const sessionData: DatabaseStudySessionInsert = {
         user_id: this.userId,
         collection_id: request.collection_id,
-        status: 'active',
+        status: "active",
         started_at: new Date().toISOString(),
         flashcards_reviewed_count: 0,
       };
 
       const { data: session, error: sessionError } = await this.supabase
-        .from('study_sessions')
+        .from("study_sessions")
         .insert(sessionData)
         .select()
         .single();
@@ -119,7 +124,7 @@ export class StudyService {
       }
 
       // Transform cards to DTO format
-      const nextFlashcards: NextFlashcardDTO[] = selectedCards.map(card => ({
+      const nextFlashcards: NextFlashcardDTO[] = selectedCards.map((card) => ({
         id: card.id,
         front: card.front,
         back: card.back,
@@ -136,7 +141,7 @@ export class StudyService {
         id: session.id,
         user_id: session.user_id,
         collection_id: session.collection_id,
-        session_type: (request.session_type || 'mixed') as "review" | "learn" | "mixed",
+        session_type: (request.session_type || "mixed") as "review" | "learn" | "mixed",
         status: session.status as "active" | "completed" | "paused",
         started_at: session.started_at,
         completed_at: session.ended_at || undefined,
@@ -147,7 +152,7 @@ export class StudyService {
         next_flashcards: nextFlashcards,
       };
     } catch (error) {
-      console.error('StudyService.startStudySession error:', error);
+      console.error("StudyService.startStudySession error:", error);
       throw error;
     }
   }
@@ -156,33 +161,33 @@ export class StudyService {
    * Review a single flashcard and update spaced repetition parameters
    */
   async reviewFlashcard(
-    sessionId: string, 
+    sessionId: string,
     request: ReviewFlashcardRequest
   ): Promise<{ success: boolean; next_review_date: string }> {
     try {
       // Validate session exists and belongs to user
       const { data: session, error: sessionError } = await this.supabase
-        .from('study_sessions')
-        .select('*')
-        .eq('id', sessionId)
-        .eq('user_id', this.userId)
-        .eq('status', 'active')
+        .from("study_sessions")
+        .select("*")
+        .eq("id", sessionId)
+        .eq("user_id", this.userId)
+        .eq("status", "active")
         .single();
 
       if (sessionError || !session) {
-        throw new Error('Active study session not found');
+        throw new Error("Active study session not found");
       }
 
       // Get current flashcard data
       const { data: flashcard, error: flashcardError } = await this.supabase
-        .from('flashcards')
-        .select('*')
-        .eq('id', request.flashcard_id)
-        .eq('collection_id', session.collection_id)
+        .from("flashcards")
+        .select("*")
+        .eq("id", request.flashcard_id)
+        .eq("collection_id", session.collection_id)
         .single();
 
       if (flashcardError || !flashcard) {
-        throw new Error('Flashcard not found in current session collection');
+        throw new Error("Flashcard not found in current session collection");
       }
 
       // Calculate new spaced repetition parameters
@@ -205,9 +210,9 @@ export class StudyService {
       };
 
       const { error: updateError } = await this.supabase
-        .from('flashcards')
+        .from("flashcards")
         .update(flashcardUpdate)
-        .eq('id', request.flashcard_id);
+        .eq("id", request.flashcard_id);
 
       if (updateError) {
         throw new Error(`Failed to update flashcard: ${updateError.message}`);
@@ -219,17 +224,14 @@ export class StudyService {
         updated_at: new Date().toISOString(),
       };
 
-      await this.supabase
-        .from('study_sessions')
-        .update(sessionUpdate)
-        .eq('id', sessionId);
+      await this.supabase.from("study_sessions").update(sessionUpdate).eq("id", sessionId);
 
       return {
         success: true,
         next_review_date: newParams.next_review_date.toISOString(),
       };
     } catch (error) {
-      console.error('StudyService.reviewFlashcard error:', error);
+      console.error("StudyService.reviewFlashcard error:", error);
       throw error;
     }
   }
@@ -238,39 +240,39 @@ export class StudyService {
    * Process multiple flashcard reviews in batch
    */
   async batchReviewFlashcards(
-    sessionId: string, 
+    sessionId: string,
     request: BatchReviewRequest
   ): Promise<{ success: boolean; processed_count: number }> {
     try {
       // Validate session exists once for the whole batch
       const { data: session, error: sessionError } = await this.supabase
-        .from('study_sessions')
-        .select('id, collection_id, flashcards_reviewed_count')
-        .eq('id', sessionId)
-        .eq('user_id', this.userId)
-        .eq('status', 'active')
+        .from("study_sessions")
+        .select("id, collection_id, flashcards_reviewed_count")
+        .eq("id", sessionId)
+        .eq("user_id", this.userId)
+        .eq("status", "active")
         .single();
 
       if (sessionError || !session) {
-        throw new Error('Active study session not found for batch processing');
+        throw new Error("Active study session not found for batch processing");
       }
 
       let processedCount = 0;
       const flashcardUpdates: (DatabaseFlashcardUpdate & { id: string })[] = [];
 
       // First, fetch all flashcards to be reviewed to ensure they exist
-      const flashcardIds = request.reviews.map(r => r.flashcard_id);
+      const flashcardIds = request.reviews.map((r) => r.flashcard_id);
       const { data: flashcards, error: flashcardsError } = await this.supabase
-        .from('flashcards')
-        .select('*')
-        .in('id', flashcardIds)
-        .eq('collection_id', session.collection_id);
+        .from("flashcards")
+        .select("*")
+        .in("id", flashcardIds)
+        .eq("collection_id", session.collection_id);
 
       if (flashcardsError) {
         throw new Error(`Failed to fetch flashcards for batch review: ${flashcardsError.message}`);
       }
-      
-      const flashcardsMap = new Map(flashcards.map(f => [f.id, f]));
+
+      const flashcardsMap = new Map(flashcards.map((f) => [f.id, f]));
 
       // Prepare all updates
       for (const review of request.reviews) {
@@ -287,7 +289,7 @@ export class StudyService {
           interval_days: flashcard.interval || 1,
         };
         const newParams = calculateNextReview(spacedRepParams);
-        
+
         flashcardUpdates.push({
           id: review.flashcard_id,
           repetitions: newParams.repetition_count,
@@ -301,28 +303,26 @@ export class StudyService {
 
       // Execute all updates in a single transaction if possible, or sequentially
       if (flashcardUpdates.length > 0) {
-        const { error: updateError } = await this.supabase
-          .from('flashcards')
-          .upsert(flashcardUpdates);
+        const { error: updateError } = await this.supabase.from("flashcards").upsert(flashcardUpdates);
 
         if (updateError) {
           throw new Error(`Batch update failed: ${updateError.message}`);
         }
       }
-      
+
       // Finally, update session statistics
       const sessionUpdate: DatabaseStudySessionUpdate = {
         flashcards_reviewed_count: session.flashcards_reviewed_count + processedCount,
         updated_at: new Date().toISOString(),
       };
-      await this.supabase.from('study_sessions').update(sessionUpdate).eq('id', sessionId);
+      await this.supabase.from("study_sessions").update(sessionUpdate).eq("id", sessionId);
 
       return {
         success: processedCount > 0,
         processed_count: processedCount,
       };
     } catch (error) {
-      console.error('StudyService.batchReviewFlashcards error:', error);
+      console.error("StudyService.batchReviewFlashcards error:", error);
       throw error;
     }
   }
@@ -330,36 +330,33 @@ export class StudyService {
   /**
    * Complete a study session
    */
-  async completeStudySession(
-    sessionId: string, 
-    request: CompleteSessionRequest
-  ): Promise<StudySessionDTO> {
+  async completeStudySession(sessionId: string, request: CompleteSessionRequest): Promise<StudySessionDTO> {
     try {
       // Validate session exists and belongs to user
       const { data: session, error: sessionError } = await this.supabase
-        .from('study_sessions')
-        .select('*')
-        .eq('id', sessionId)
-        .eq('user_id', this.userId)
-        .eq('status', 'active')
+        .from("study_sessions")
+        .select("*")
+        .eq("id", sessionId)
+        .eq("user_id", this.userId)
+        .eq("status", "active")
         .single();
 
       if (sessionError || !session) {
-        throw new Error('Active study session not found');
+        throw new Error("Active study session not found");
       }
 
       // Update session with completion data
       const sessionUpdate: DatabaseStudySessionUpdate = {
-        status: 'completed',
+        status: "completed",
         ended_at: new Date().toISOString(),
         flashcards_reviewed_count: Math.max(session.flashcards_reviewed_count, request.cards_reviewed),
         updated_at: new Date().toISOString(),
       };
 
       const { data: updatedSession, error: updateError } = await this.supabase
-        .from('study_sessions')
+        .from("study_sessions")
         .update(sessionUpdate)
-        .eq('id', sessionId)
+        .eq("id", sessionId)
         .select()
         .single();
 
@@ -371,7 +368,7 @@ export class StudyService {
         id: updatedSession.id,
         user_id: updatedSession.user_id,
         collection_id: updatedSession.collection_id,
-        session_type: 'mixed' as "review" | "learn" | "mixed", // Default as schema doesn't store this
+        session_type: "mixed" as "review" | "learn" | "mixed", // Default as schema doesn't store this
         status: updatedSession.status as "active" | "completed" | "paused",
         started_at: updatedSession.started_at,
         completed_at: updatedSession.ended_at || undefined,
@@ -382,7 +379,7 @@ export class StudyService {
         next_flashcards: [], // No next cards for completed session
       };
     } catch (error) {
-      console.error('StudyService.completeStudySession error:', error);
+      console.error("StudyService.completeStudySession error:", error);
       throw error;
     }
   }
@@ -393,10 +390,10 @@ export class StudyService {
   async getStudySession(sessionId: string): Promise<StudySessionDTO | null> {
     try {
       const { data: session, error } = await this.supabase
-        .from('study_sessions')
-        .select('*')
-        .eq('id', sessionId)
-        .eq('user_id', this.userId)
+        .from("study_sessions")
+        .select("*")
+        .eq("id", sessionId)
+        .eq("user_id", this.userId)
         .single();
 
       if (error || !session) {
@@ -407,7 +404,7 @@ export class StudyService {
         id: session.id,
         user_id: session.user_id,
         collection_id: session.collection_id,
-        session_type: 'mixed' as "review" | "learn" | "mixed", // Default as schema doesn't store this
+        session_type: "mixed" as "review" | "learn" | "mixed", // Default as schema doesn't store this
         status: session.status as "active" | "completed" | "paused",
         started_at: session.started_at,
         completed_at: session.ended_at || undefined,
@@ -418,7 +415,7 @@ export class StudyService {
         next_flashcards: [], // Would need separate query to get remaining cards
       };
     } catch (error) {
-      console.error('StudyService.getStudySession error:', error);
+      console.error("StudyService.getStudySession error:", error);
       throw error;
     }
   }
@@ -426,24 +423,24 @@ export class StudyService {
   /**
    * Get user's recent study sessions
    */
-  async getRecentStudySessions(limit: number = 10): Promise<StudySessionDTO[]> {
+  async getRecentStudySessions(limit = 10): Promise<StudySessionDTO[]> {
     try {
       const { data: sessions, error } = await this.supabase
-        .from('study_sessions')
-        .select('*')
-        .eq('user_id', this.userId)
-        .order('started_at', { ascending: false })
+        .from("study_sessions")
+        .select("*")
+        .eq("user_id", this.userId)
+        .order("started_at", { ascending: false })
         .limit(limit);
 
       if (error) {
         throw new Error(`Failed to fetch study sessions: ${error.message}`);
       }
 
-      return sessions.map(session => ({
+      return sessions.map((session) => ({
         id: session.id,
         user_id: session.user_id,
         collection_id: session.collection_id,
-        session_type: 'mixed' as "review" | "learn" | "mixed", // Default as schema doesn't store this
+        session_type: "mixed" as "review" | "learn" | "mixed", // Default as schema doesn't store this
         status: session.status as "active" | "completed" | "paused",
         started_at: session.started_at,
         completed_at: session.ended_at || undefined,
@@ -454,8 +451,8 @@ export class StudyService {
         next_flashcards: [],
       }));
     } catch (error) {
-      console.error('StudyService.getRecentStudySessions error:', error);
+      console.error("StudyService.getRecentStudySessions error:", error);
       throw error;
     }
   }
-} 
+}

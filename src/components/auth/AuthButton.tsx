@@ -1,5 +1,5 @@
-import { useAuth } from '../hooks/useAuth';
-import { Button } from '../ui/button';
+import { useAuth } from "../hooks/useAuth";
+import { Button } from "../ui/button";
 
 export const AuthButton = () => {
   try {
@@ -19,9 +19,9 @@ export const AuthButton = () => {
       const handleLogout = async () => {
         try {
           await signOut();
-          window.location.href = '/';
+          window.location.href = "/";
         } catch (error) {
-          console.error('Error during logout:', error);
+          console.error("Error during logout:", error);
         }
       };
 
@@ -38,7 +38,7 @@ export const AuthButton = () => {
     } else {
       // User is not logged in - show login button
       return (
-        <a 
+        <a
           href="/login"
           className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors w-full text-left"
         >
@@ -48,10 +48,10 @@ export const AuthButton = () => {
       );
     }
   } catch (error) {
-    console.error('Error in AuthButton:', error);
+    console.error("Error in AuthButton:", error);
     // Fallback to login link if there's an error
     return (
-      <a 
+      <a
         href="/login"
         className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors w-full text-left"
       >
@@ -60,4 +60,4 @@ export const AuthButton = () => {
       </a>
     );
   }
-}; 
+};

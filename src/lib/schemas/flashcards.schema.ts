@@ -43,7 +43,10 @@ export const updateFlashcardSchema = z.object({
 });
 
 export const bulkCreateFlashcardsSchema = z.object({
-  flashcards: z.array(createFlashcardSchema).min(1, "At least one flashcard is required").max(50, "Maximum 50 flashcards per bulk operation"),
+  flashcards: z
+    .array(createFlashcardSchema)
+    .min(1, "At least one flashcard is required")
+    .max(50, "Maximum 50 flashcards per bulk operation"),
 });
 
 /**
@@ -70,4 +73,4 @@ export const flashcardsListQuerySchema = z
 export type CreateFlashcardRequest = z.infer<typeof createFlashcardSchema>;
 export type UpdateFlashcardRequest = z.infer<typeof updateFlashcardSchema>;
 export type BulkCreateFlashcardsRequest = z.infer<typeof bulkCreateFlashcardsSchema>;
-export type FlashcardsListQueryParams = z.infer<typeof flashcardsListQuerySchema>; 
+export type FlashcardsListQueryParams = z.infer<typeof flashcardsListQuerySchema>;

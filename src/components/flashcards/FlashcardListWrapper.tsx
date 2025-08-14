@@ -22,4 +22,4 @@ export const FlashcardListWrapper: React.FC = () => {
       <FlashcardList />
     </AuthProvider>
   );
-}; 
+};

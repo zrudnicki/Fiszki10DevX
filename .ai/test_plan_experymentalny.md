@@ -111,11 +111,7 @@ CI/CD: Testy powinny być zintegrowane z potokiem CI/CD (np. przy użyciu GitHub
 Zmienne Środowiskowe: Oddzielny plik .env.test będzie używany do przechowywania poświadczeń do testowego projektu Supabase i wszelkich innych konfiguracji specyficznych dla testów.)
 
 Strategia Wykonywania Testów
-( 1. Testy Jednostkowe i Integracyjne: Powinny być uruchamiane jako pierwsze, ponieważ są najszybsze i mogą wcześnie wykryć problemy. Będą wykonywane przy każdym zapisie pliku podczas developmentu oraz jako wstępny krok w potoku CI.
-2. Testy API: Uruchamiane po testach jednostkowych/integracyjnych. Będą one przeprowadzane na wdrożonym środowisku testowym w potoku CI, aby upewnić się, że backend jest stabilny przed uruchomieniem testów E2E.
-3. Testy End-to-End (E2E): Są to najbardziej kompleksowe testy i będą uruchamiane jako ostatnie w potoku CI. Będą testować krytyczne ścieżki użytkownika zdefiniowane w przypadkach testowych.
-4. Testy Manualne: Testy eksploracyjne i użyteczności będą przeprowadzane ręcznie przed głównym wydaniem, aby wychwycić problemy nieobjęte testami automatycznymi.
-5. Testy Regresji: Pełny zestaw zautomatyzowanych testów (jednostkowych, API, E2E) będzie uruchamiany przed każdym wdrożeniem na produkcję, aby zapobiec regresjom.)
+( 1. Testy Jednostkowe i Integracyjne: Powinny być uruchamiane jako pierwsze, ponieważ są najszybsze i mogą wcześnie wykryć problemy. Będą wykonywane przy każdym zapisie pliku podczas developmentu oraz jako wstępny krok w potoku CI. 2. Testy API: Uruchamiane po testach jednostkowych/integracyjnych. Będą one przeprowadzane na wdrożonym środowisku testowym w potoku CI, aby upewnić się, że backend jest stabilny przed uruchomieniem testów E2E. 3. Testy End-to-End (E2E): Są to najbardziej kompleksowe testy i będą uruchamiane jako ostatnie w potoku CI. Będą testować krytyczne ścieżki użytkownika zdefiniowane w przypadkach testowych. 4. Testy Manualne: Testy eksploracyjne i użyteczności będą przeprowadzane ręcznie przed głównym wydaniem, aby wychwycić problemy nieobjęte testami automatycznymi. 5. Testy Regresji: Pełny zestaw zautomatyzowanych testów (jednostkowych, API, E2E) będzie uruchamiany przed każdym wdrożeniem na produkcję, aby zapobiec regresjom.)
 
 Ryzyka i Mitygacja
 (

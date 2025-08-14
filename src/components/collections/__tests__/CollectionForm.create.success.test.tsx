@@ -49,5 +49,3 @@ describe("CollectionForm - create success", () => {
     Object.defineProperty(window, "location", { configurable: true, value: originalLocation });
   });
 });
-
-

@@ -5,6 +5,7 @@
 Architektura interfejsu użytkownika (UI) dla aplikacji Fiszki została zaprojektowana z priorytetem na prostotę, szybkość implementacji i łatwość testowania, zgodnie z decyzjami podjętymi podczas sesji planistycznej. Opiera się na architekturze zorientowanej na treść z wykorzystaniem Astro, gdzie większość logiki i renderowania odbywa się po stronie serwera (SSR).
 
 Kluczowe zasady:
+
 - **Server-Side First**: Strony są generowane serwerowo. Interaktywność po stronie klienta jest ograniczona do minimum i implementowana za pomocą izolowanych komponentów React (Astro Islands).
 - **Brak złożonego stanu po stronie klienta**: Rezygnujemy z globalnych bibliotek do zarządzania stanem (jak Redux czy TanStack Query). Stan aplikacji jest odświeżany poprzez przeładowanie strony po akcjach użytkownika.
 - **Tradycyjne formularze**: Interakcje zapisu danych (tworzenie, edycja) opierają się na standardowych formularzach HTML, które po wysłaniu wykonują pełne przeładowanie strony.
@@ -13,6 +14,7 @@ Kluczowe zasady:
 ## 2. Lista widoków
 
 ### Widok 1: Strona Logowania / Rejestracji
+
 - **Ścieżka widoku**: `/` (lub `/login`, `/register` w zależności od implementacji routera)
 - **Główny cel**: Uwierzytelnienie użytkownika. Umożliwienie nowym użytkownikom założenia konta.
 - **Kluczowe informacje do wyświetlenia**: Pola na email i hasło, przyciski akcji, link do przełączania się między logowaniem a rejestracją.
@@ -23,6 +25,7 @@ Kluczowe zasady:
   - **Bezpieczeństwo**: Komunikacja z API Supabase przez HTTPS.
 
 ### Widok 2: Panel Główny (Dashboard)
+
 - **Ścieżka widoku**: `/dashboard`
 - **Główny cel**: Służy jako centralny hub nawigacyjny do wszystkich głównych funkcji aplikacji.
 - **Kluczowe informacje do wyświetlenia**: Wizualne linki (karty) do: Zarządzania Kolekcjami, Zarządzania Kategoriami, Sesji Nauki, Generowania Fiszek (AI i ręczne), Statystyk i **Ustawień Konta**.
@@ -33,6 +36,7 @@ Kluczowe zasady:
   - **Bezpieczeństwo**: Widok chroniony przez middleware, dostępny tylko dla zalogowanych użytkowników.
 
 ### Widok 3: Zarządzanie Kolekcjami
+
 - **Ścieżka widoku**:
   - `/dashboard/collections` (Lista)
   - `/dashboard/collections/new` (Formularz tworzenia)
@@ -50,6 +54,7 @@ Kluczowe zasady:
   - **Bezpieczeństwo**: Wszystkie operacje są autoryzowane w API i ograniczone do zasobów zalogowanego użytkownika (RLS).
 
 ### Widok 4: Generowanie Fiszek AI
+
 - **Ścieżka widoku**:
   - `/dashboard/ai/generate` (Formularz generowania)
   - `/dashboard/ai/review/[id]` (Recenzja wygenerowanych fiszek)
@@ -64,6 +69,7 @@ Kluczowe zasady:
   - **Bezpieczeństwo**: Walidacja długości tekstu wejściowego po stronie serwera, aby zapobiec nadużyciom API.
 
 ### Widok 5: Sesja Nauki
+
 - **Ścieżka widoku**:
   - `/dashboard/study/session` (Główny widok sesji)
   - `/dashboard/study/complete` (Strona podsumowania)
@@ -78,6 +84,7 @@ Kluczowe zasady:
   - **Bezpieczeństwo**: Sesja jest powiązana z zalogowanym użytkownikiem.
 
 ### Widok 6: Statystyki
+
 - **Ścieżka widoku**: `/dashboard/stats`
 - **Główny cel**: Zaprezentowanie użytkownikowi jego postępów w nauce i efektywności generowania fiszek.
 - **Kluczowe informacje do wyświetlenia**: Kluczowe metryki z API (`/api/stats/learning`, `/api/stats/generation`) jako proste liczby, np. "Całkowita liczba recenzji", "Współczynnik akceptacji AI".
@@ -87,6 +94,7 @@ Kluczowe zasady:
   - **Dostępność**: Użycie kolorów do sygnalizacji (np. dobry/zły wskaźnik) musi być połączone z tekstową alternatywą lub etykietą ARIA.
 
 ### Widok 7: Ręczne Tworzenie Fiszki
+
 - **Ścieżka widoku**: `/dashboard/flashcards/new`
 - **Główny cel**: Umożliwienie użytkownikowi szybkiego, ręcznego dodania pojedynczej fiszki.
 - **Kluczowe informacje do wyświetlenia**: Formularz z polami: `Input` na "Front", `Textarea` na "Back", oraz opcjonalnymi selektorami (`Select`) do przypisania fiszki do istniejącej Kolekcji i Kategorii.
@@ -97,6 +105,7 @@ Kluczowe zasady:
   - **Bezpieczeństwo**: Dane formularza są walidowane po stronie serwera zgodnie ze schematem Zod.
 
 ### Widok 8: Zarządzanie Kategoriami
+
 - **Ścieżka widoku**:
   - `/dashboard/categories` (Lista)
   - `/dashboard/categories/new` (Formularz tworzenia)
@@ -112,6 +121,7 @@ Kluczowe zasady:
   - **Bezpieczeństwo**: Operacje chronione przez middleware i RLS w bazie danych.
 
 ### Widok 9: Ustawienia i Usuwanie Konta
+
 - **Ścieżka widoku**: `/dashboard/account`
 - **Główny cel**: Umożliwienie użytkownikowi zarządzania swoim kontem, w tym jego permanentnego usunięcia.
 - **Kluczowe informacje do wyświetlenia**: Informacje o koncie (np. email użytkownika). Wyraźnie oznaczona sekcja "Strefa Zagrożenia" (`Danger Zone`).
@@ -122,6 +132,7 @@ Kluczowe zasady:
   - **Bezpieczeństwo**: Operacja usunięcia musi być wywołana po stronie serwera przez dedykowany endpoint API, który ma uprawnienia do usuwania użytkownika i wszystkich powiązanych z nim danych z bazy Supabase.
 
 ### Widok 10: Edycja Fiszki
+
 - **Ścieżka widoku**: `/dashboard/flashcards/[id]/edit`
 - **Główny cel**: Umożliwienie użytkownikowi edycji istniejącej fiszki.
 - **Kluczowe informacje do wyświetlenia**: Formularz z polami `Input` na "Front" i `Textarea` na "Back" wstępnie wypełnionymi danymi fiszki.
@@ -134,7 +145,8 @@ Kluczowe zasady:
 ## 3. Mapa podróży użytkownika
 
 **Przypadek użycia 1: Generowanie fiszek przez AI i rozpoczęcie nauki.**
-1.  **Krok 1: Logowanie**: Użytkownik ląduje na ` / ` i loguje się. Po sukcesie jest przekierowany do `/dashboard`.
+
+1.  **Krok 1: Logowanie**: Użytkownik ląduje na `/` i loguje się. Po sukcesie jest przekierowany do `/dashboard`.
 2.  **Krok 2: Inicjacja generowania**: W Panelu Głównym (`/dashboard`) użytkownik klika link "Generuj fiszki z tekstu" i przechodzi do `/dashboard/ai/generate`.
 3.  **Krok 3: Wprowadzenie danych**: Użytkownik wkleja tekst do pola `Textarea` i klika "Generuj". Formularz jest wysyłany.
 4.  **Krok 4: Recenzja**: Użytkownik jest przekierowany na stronę `/dashboard/ai/review/[id]`, gdzie widzi listę propozycji fiszek. Przegląda je, opcjonalnie edytuje kilka z nich (co wiąże się z przejściem na podstronę edycji i powrotem) i odznacza te, których nie chce.
@@ -145,6 +157,7 @@ Kluczowe zasady:
 9.  **Krok 9: Podsumowanie**: Użytkownik widzi stronę z gratulacjami (`/dashboard/study/complete`) i decyduje, czy chce kontynuować, czy zakończyć naukę na dziś, co przekierowuje go z powrotem do `/dashboard`.
 
 **Przypadek użycia 2: Ręczne tworzenie fiszki.**
+
 1.  **Krok 1: Logowanie**: Użytkownik loguje się i trafia na `/dashboard`.
 2.  **Krok 2: Inicjacja tworzenia**: W Panelu Głównym klika link "Twórz fiszki ręcznie", przechodząc do `/dashboard/flashcards/new`.
 3.  **Krok 3: Wypełnienie formularza**: Użytkownik wypełnia pola "Front" i "Back" oraz opcjonalnie wybiera Kolekcję i Kategorię.
@@ -152,6 +165,7 @@ Kluczowe zasady:
 5.  **Krok 5: Potwierdzenie**: Po pomyślnym zapisie, użytkownik jest przekierowywany na listę kolekcji (`/dashboard/collections`), gdzie może zobaczyć zaktualizowany stan.
 
 **Przypadek użycia 3: Usunięcie konta.**
+
 1.  **Krok 1: Logowanie**: Użytkownik loguje się i trafia na `/dashboard`.
 2.  **Krok 2: Nawigacja do ustawień**: W Panelu Głównym klika link "Ustawienia Konta", przechodząc do `/dashboard/account`.
 3.  **Krok 3: Inicjacja usunięcia**: Użytkownik klika przycisk "Usuń konto".
@@ -160,6 +174,7 @@ Kluczowe zasady:
 6.  **Krok 6: Wylogowanie i przekierowanie**: Po pomyślnym usunięciu konta, użytkownik jest automatycznie wylogowywany, a jego sesja kończona. Następuje przekierowanie na stronę główną (`/`).
 
 **Przypadek użycia 4: Edycja istniejącej fiszki.**
+
 1.  **Krok 1: Nawigacja do kolekcji**: Użytkownik loguje się, trafia na `/dashboard`, a następnie przechodzi do listy kolekcji (`/dashboard/collections`).
 2.  **Krok 2: Wybór kolekcji**: Użytkownik klika na nazwę kolekcji, którą chce przejrzeć. Zostaje przekierowany do strony szczegółów tej kolekcji (`/dashboard/collections/[id]`).
 3.  **Krok 3: Inicjacja edycji**: Na liście fiszek w danej kolekcji, użytkownik znajduje interesującą go fiszkę i klika przycisk "Edytuj". Zostaje przekierowany na stronę edycji fiszki (`/dashboard/flashcards/[id]/edit`).
@@ -187,4 +202,4 @@ Poniższe komponenty (głównie z biblioteki Shadcn/ui) będą reużywane w cał
 - **`Select`**: Do wyboru opcji z listy (np. kolekcji lub kategorii).
 - **`AuthButton`**: Istniejący komponent React do obsługi wylogowywania.
 - **`Alert` / `AlertDescription`**: Do wyświetlania globalnych błędów lub ważnych komunikatów.
-- **`AlertDialog`**: Do potwierdzania akcji destrukcyjnych, takich jak usuwanie konta czy kolekcji. 
+- **`AlertDialog`**: Do potwierdzania akcji destrukcyjnych, takich jak usuwanie konta czy kolekcji.

@@ -23,7 +23,7 @@ describe("CollectionTableRow delete - error", () => {
     const { CollectionTableRow } = await import("../CollectionTableRow");
 
     vi.spyOn(window, "confirm").mockImplementation(() => true);
-    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
+    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => void 0);
 
     const col: CollectionDTO = {
       id: "col-2",
@@ -53,5 +53,3 @@ describe("CollectionTableRow delete - error", () => {
     expect(alertSpy).toHaveBeenCalled();
   });
 });
-
-

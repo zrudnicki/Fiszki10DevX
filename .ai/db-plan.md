@@ -14,6 +14,7 @@ CREATE TABLE users (
 ```
 
 ### collections
+
 ```sql
 CREATE TABLE collections (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -26,6 +27,7 @@ CREATE TABLE collections (
 ```
 
 ### categories
+
 ```sql
 CREATE TABLE categories (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -39,6 +41,7 @@ CREATE TABLE categories (
 ```
 
 ### flashcards
+
 ```sql
 CREATE TABLE flashcards (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -55,6 +58,7 @@ CREATE TABLE flashcards (
 ```
 
 ### flashcard_generation_stats
+
 ```sql
 CREATE TABLE flashcard_generation_stats (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -76,21 +80,26 @@ CREATE TABLE flashcard_generation_stats (
 ## 2. Relacje
 
 1. users -> collections (1:N)
+
    - Jeden użytkownik może mieć wiele kolekcji
    - Kolekcja należy do jednego użytkownika
 
 2. users -> flashcards (1:N)
+
    - Jeden użytkownik może mieć wiele fiszek
    - Fiszka należy do jednego użytkownika
 
 3. collections -> flashcards (1:N)
+
    - Jedna kolekcja może zawierać wiele fiszek
    - Fiszka może należeć do jednej kolekcji (opcjonalnie)
 
 4. users -> flashcard_generation_stats (1:1)
+
    - Jeden użytkownik ma jeden rekord statystyk generowania
 
 5. users -> categories (1:N)
+
    - Jeden użytkownik może mieć wiele kategorii
    - Kategoria należy do jednego użytkownika
 
@@ -170,22 +179,25 @@ CREATE POLICY "Users can update their own categories" ON categories
 ## 5. Uwagi i wyjaśnienia
 
 1. **Ograniczenia długości**
+
    - Zgodnie z PRD, pola `front` i `back` mają ograniczenia długości
    - Dodatkowo dodano ograniczenia dla nazwy i opisu kolekcji
 
 2. **Soft Delete**
+
    - Tabela `users` zawiera pole `deleted_at` dla implementacji soft delete
    - Pozostałe tabele używają CASCADE dla usuwania powiązanych danych
 
 3. **Statystyki**
+
    - Tabela `flashcard_generation_stats` przechowuje szczegółowe statystyki generowania fiszek
    - Pozwala na śledzenie efektywności generowania AI poprzez rozróżnienie między:
-     * `total_accepted_direct` - fiszki zaakceptowane bez edycji
-     * `total_accepted_edited` - fiszki zaakceptowane po edycji
+     - `total_accepted_direct` - fiszki zaakceptowane bez edycji
+     - `total_accepted_edited` - fiszki zaakceptowane po edycji
    - Dodano ograniczenie sprawdzające poprawność liczb (nieujemne i suma akceptacji nie większa niż wygenerowane)
    - Umożliwia weryfikację kryteriów sukcesu:
-     * Procent akceptacji fiszek (suma `total_accepted_direct` i `total_accepted_edited` / `total_generated`)
-     * Procent fiszek tworzonych przez AI (suma akceptacji / całkowita liczba fiszek użytkownika)
+     - Procent akceptacji fiszek (suma `total_accepted_direct` i `total_accepted_edited` / `total_generated`)
+     - Procent fiszek tworzonych przez AI (suma akceptacji / całkowita liczba fiszek użytkownika)
 
 4. **Kategoryzacja**
    - Dedykowana tabela `categories` dla lepszej organizacji fiszek

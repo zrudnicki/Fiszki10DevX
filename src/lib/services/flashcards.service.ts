@@ -37,7 +37,8 @@ export class FlashcardsService {
 
       let dataQuery = this.supabase
         .from("flashcards")
-        .select(`
+        .select(
+          `
           id,
           front,
           back,
@@ -50,7 +51,8 @@ export class FlashcardsService {
           next_review_date,
           created_at,
           updated_at
-        `)
+        `
+        )
         .eq("user_id", userId);
 
       // Apply filters
@@ -117,7 +119,8 @@ export class FlashcardsService {
     try {
       const { data, error } = await this.supabase
         .from("flashcards")
-        .select(`
+        .select(
+          `
           id,
           front,
           back,
@@ -130,7 +133,8 @@ export class FlashcardsService {
           next_review_date,
           created_at,
           updated_at
-        `)
+        `
+        )
         .eq("user_id", userId)
         .eq("id", flashcardId)
         .single();
@@ -232,11 +236,7 @@ export class FlashcardsService {
 
       console.log("Attempting to insert flashcard:", insertData);
 
-      const { data, error } = await this.supabase
-        .from("flashcards")
-        .insert(insertData)
-        .select()
-        .single();
+      const { data, error } = await this.supabase.from("flashcards").insert(insertData).select().single();
 
       if (error) {
         console.error("Supabase insert error:", error);
@@ -272,8 +272,8 @@ export class FlashcardsService {
   ): Promise<BulkCreateFlashcardsResponse> {
     try {
       // Validate all foreign keys before bulk insert
-      const uniqueCollectionIds = [...new Set(request.flashcards.map(f => f.collection_id))];
-      const uniqueCategoryIds = [...new Set(request.flashcards.map(f => f.category_id).filter(Boolean))];
+      const uniqueCollectionIds = [...new Set(request.flashcards.map((f) => f.collection_id))];
+      const uniqueCategoryIds = [...new Set(request.flashcards.map((f) => f.category_id).filter(Boolean))];
 
       // Validate collections
       for (const collectionId of uniqueCollectionIds) {
@@ -292,7 +292,7 @@ export class FlashcardsService {
       }
 
       // Prepare insert data
-      const insertData: DatabaseFlashcardInsert[] = request.flashcards.map(flashcard => {
+      const insertData: DatabaseFlashcardInsert[] = request.flashcards.map((flashcard) => {
         const initialParams = getInitialSpacedRepetitionParams();
         return {
           user_id: userId,
@@ -310,10 +310,7 @@ export class FlashcardsService {
 
       console.log(`Attempting to bulk insert ${insertData.length} flashcards`);
 
-      const { data, error } = await this.supabase
-        .from("flashcards")
-        .insert(insertData)
-        .select();
+      const { data, error } = await this.supabase.from("flashcards").insert(insertData).select();
 
       if (error) {
         console.error("Supabase bulk insert error:", error);
@@ -427,11 +424,7 @@ export class FlashcardsService {
         return false;
       }
 
-      const { error } = await this.supabase
-        .from("flashcards")
-        .delete()
-        .eq("user_id", userId)
-        .eq("id", flashcardId);
+      const { error } = await this.supabase.from("flashcards").delete().eq("user_id", userId).eq("id", flashcardId);
 
       if (error) {
         throw new Error(`Failed to delete flashcard: ${error.message}`);
@@ -443,4 +436,4 @@ export class FlashcardsService {
       throw error;
     }
   }
-} 
+}

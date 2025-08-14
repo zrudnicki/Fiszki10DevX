@@ -18,4 +18,4 @@ export const AIGenerateFormWrapper: React.FC = () => {
       <AIGenerateForm />
     </AuthProvider>
   );
-}; 
+};
