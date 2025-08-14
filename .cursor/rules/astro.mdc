@@ -17,3 +17,4 @@ alwaysApply: false
 - Implement hybrid rendering with server-side rendering where needed
 - Use Astro.cookies for server-side cookie management
 - Leverage import.meta.env for environment variables
+- use Navigation.tsx (as a sample how to wrap component in AuthProvider in order to provide authentication) and UserMenu.tsx as a example how to obtain session data

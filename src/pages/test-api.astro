@@ -1,0 +1,1571 @@
+---
+export const prerender = false;
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+---
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiszki API - Test Interface</title>
+  <style>
+    /* === RESET & BASE === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #fafafa;
+      color: #3b4151;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    
+    /* === LAYOUT === */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0;
+      background: white;
+      min-height: 100vh;
+    }
+    
+    /* === HEADER === */
+    .header {
+      background: linear-gradient(90deg, #1976d2 0%, #1565c0 100%);
+      color: white;
+      padding: 2rem 3rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .header h1 {
+      font-size: 2.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .header h1::before {
+      content: "🔌";
+      font-size: 2rem;
+    }
+    
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+    
+    .user-info {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* === LOADING & LOGIN === */
+    .loading, .login-required {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: white;
+      color: #3b4151;
+      text-align: center;
+    }
+    
+    .loading h2, .login-required h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #1976d2;
+    }
+    
+    .login-required a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #1976d2;
+      color: white;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      margin-top: 1.5rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(25, 118, 210, 0.3);
+    }
+    
+    .login-required a:hover {
+      background: #1565c0;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(25, 118, 210, 0.4);
+    }
+    
+    /* === MAIN CONTENT === */
+    .endpoint-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+    
+    /* === ENDPOINT CARDS === */
+    .endpoint-card {
+      background: white;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+    
+    .endpoint-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transform: translateY(-1px);
+    }
+    
+    .endpoint-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+      padding: 1rem 1.5rem;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e8e8e8;
+      margin-bottom: 1.5rem;
+    }
+    
+    .method-badge {
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      min-width: 60px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    
+    .method-get { 
+      background: linear-gradient(135deg, #61affe 0%, #4990e2 100%);
+    }
+    .method-post { 
+      background: linear-gradient(135deg, #49cc90 0%, #22c55e 100%);
+    }
+    .method-put { 
+      background: linear-gradient(135deg, #fca130 0%, #f59e0b 100%);
+    }
+    .method-delete { 
+      background: linear-gradient(135deg, #f93e3e 0%, #ef4444 100%);
+    }
+    
+    .endpoint-path {
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+      font-size: 1rem;
+      color: #3b4151;
+      font-weight: 500;
+    }
+    
+    /* === ENDPOINT CONTENT === */
+    .endpoint-card form {
+      padding: 1.5rem;
+    }
+    
+    /* === FORMS === */
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #374151;
+    }
+    
+    .form-group .label-required {
+      color: #ef4444;
+    }
+    
+    .form-group input, 
+    .form-group textarea, 
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: white;
+      color: #111827;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    
+    .form-group input:focus, 
+    .form-group textarea:focus, 
+    .form-group select:focus {
+      outline: none;
+      border-color: #1976d2;
+      box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+    }
+    
+    .form-group input::placeholder, 
+    .form-group textarea::placeholder {
+      color: #9ca3af;
+    }
+    
+    /* === BUTTONS === */
+    .btn {
+      background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 4px rgba(25, 118, 210, 0.3);
+      width: 100%;
+      margin-top: 1rem;
+    }
+    
+    .btn:hover {
+      background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(25, 118, 210, 0.4);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    /* === RESPONSES === */
+    .response {
+      margin: 1.5rem;
+      margin-top: 0;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+      background: white;
+    }
+    
+    .response.hidden {
+      display: none;
+    }
+    
+    .response-status {
+      padding: 1rem 1.5rem;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e5e7eb;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .status-200 { color: #22c55e; }
+    .status-201 { color: #22c55e; }
+    .status-204 { color: #22c55e; }
+    .status-400 { color: #f59e0b; }
+    .status-401 { color: #ef4444; }
+    .status-404 { color: #ef4444; }
+    .status-500 { color: #ef4444; }
+    
+    .response pre {
+      padding: 1.5rem;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+    }
+    
+    .response pre::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .response pre::-webkit-scrollbar-track {
+      background: #2d2d2d;
+    }
+    
+    .response pre::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 4px;
+    }
+    
+    .response pre::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+    
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      .header {
+        padding: 1.5rem 1rem;
+      }
+      
+      .endpoint-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+      }
+      
+      .endpoint-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+    
+    /* === LOADING ANIMATION === */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #e5e7eb;
+      border-radius: 50%;
+      border-top-color: #1976d2;
+      animation: spin 1s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="loading">
+      🧠 Ładowanie Fiszki API Test Interface...
+    </div>
+  </div>
+
+  <!-- Supabase JS -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  
+  <script define:vars={{ supabaseUrl, supabaseAnonKey }}>
+    window.addEventListener('load', function() {
+      const { createClient } = window.supabase;
+      const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+
+      let currentUser = null;
+
+      // Show loading screen
+      function showLoading() {
+        document.getElementById('app').innerHTML = `
+          <div class="loading">
+            🧠 Ładowanie Fiszki API Test Interface...
+          </div>
+        `;
+      }
+
+      // Show login required screen
+      function showLoginRequired() {
+        document.getElementById('app').innerHTML = `
+          <div class="login-required">
+            <div>
+              <h1>🔒 Wymagane logowanie</h1>
+              <p>Aby korzystać z API Test Interface, musisz się zalogować.</p>
+              <a href="/login">Przejdź do logowania</a>
+            </div>
+          </div>
+        `;
+      }
+
+      // Show main test interface
+      function showTestInterface(user) {
+        const userName = user.email || user.user_metadata?.full_name || 'User';
+        
+        document.getElementById('app').innerHTML = `
+          <div class="container">
+            <div class="header">
+              <h1>🧠 Fiszki API Test Interface</h1>
+              <p>Interactive API endpoint testing</p>
+              <div class="user-info">
+                👤 Authenticated as: <strong>${userName}</strong><br />
+                🔒 Session active - All requests will use your authentication
+              </div>
+            </div>
+            
+            <div class="endpoint-grid">
+              <!-- GET Collections -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-get">GET</span>
+                  <span>/api/collections</span>
+                </div>
+                <form onsubmit="testEndpoint(event, 'GET', '/api/collections', 'get-collections-response')">
+                  <div class="form-group">
+                    <label>Page (optional):</label>
+                    <input type="number" name="page" placeholder="1" min="1">
+                  </div>
+                  <div class="form-group">
+                    <label>Limit (optional):</label>
+                    <input type="number" name="limit" placeholder="20" min="1" max="100">
+                  </div>
+                  <div class="form-group">
+                    <label>Sort by:</label>
+                    <select name="sort_by">
+                      <option value="created_at">created_at</option>
+                      <option value="name">name</option>
+                      <option value="updated_at">updated_at</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Sort order:</label>
+                    <select name="sort_order">
+                      <option value="desc">desc</option>
+                      <option value="asc">asc</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn">Test GET Collections</button>
+                </form>
+                <div id="get-collections-response" class="response hidden"></div>
+              </div>
+
+              <!-- POST Collection -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-post">POST</span>
+                  <span>/api/collections</span>
+                </div>
+                <form onsubmit="testEndpoint(event, 'POST', '/api/collections', 'post-collection-response')">
+                  <div class="form-group">
+                    <label>Name (required):</label>
+                    <input type="text" name="name" placeholder="Hiszpański - Podstawy" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Description (optional):</label>
+                    <textarea name="description" placeholder="Podstawowe słownictwo hiszpańskie" rows="3"></textarea>
+                  </div>
+                  <button type="submit" class="btn">Test POST Collection</button>
+                </form>
+                <div id="post-collection-response" class="response hidden"></div>
+              </div>
+
+              <!-- GET Collection by ID -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-get">GET</span>
+                  <span>/api/collections/{id}</span>
+                </div>
+                <form onsubmit="testEndpointWithId(event, 'GET', '/api/collections', 'get-collection-response')">
+                  <div class="form-group">
+                    <label>Collection ID (required):</label>
+                    <input type="text" name="id" placeholder="UUID of the collection" required>
+                  </div>
+                  <button type="submit" class="btn">Test GET Collection</button>
+                </form>
+                <div id="get-collection-response" class="response hidden"></div>
+              </div>
+
+              <!-- PUT Collection -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-put">PUT</span>
+                  <span>/api/collections/{id}</span>
+                </div>
+                <form onsubmit="testEndpointWithId(event, 'PUT', '/api/collections', 'put-collection-response')">
+                  <div class="form-group">
+                    <label>Collection ID (required):</label>
+                    <input type="text" name="id" placeholder="UUID of the collection" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Name (optional):</label>
+                    <input type="text" name="name" placeholder="Updated collection name">
+                  </div>
+                  <div class="form-group">
+                    <label>Description (optional):</label>
+                    <textarea name="description" placeholder="Updated description" rows="3"></textarea>
+                  </div>
+                  <button type="submit" class="btn">Test PUT Collection</button>
+                </form>
+                <div id="put-collection-response" class="response hidden"></div>
+              </div>
+
+              <!-- DELETE Collection -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-delete">DELETE</span>
+                  <span>/api/collections/{id}</span>
+                </div>
+                <form onsubmit="testEndpointWithId(event, 'DELETE', '/api/collections', 'delete-collection-response')">
+                  <div class="form-group">
+                    <label>Collection ID (required):</label>
+                    <input type="text" name="id" placeholder="UUID of the collection" required>
+                  </div>
+                  <button type="submit" class="btn">Test DELETE Collection</button>
+                </form>
+                <div id="delete-collection-response" class="response hidden"></div>
+              </div>
+
+              <!-- GET Categories -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-get">GET</span>
+                  <span>/api/categories</span>
+                </div>
+                <form onsubmit="testEndpoint(event, 'GET', '/api/categories', 'get-categories-response')">
+                  <div class="form-group">
+                    <label>Page (optional):</label>
+                    <input type="number" name="page" placeholder="1" min="1">
+                  </div>
+                  <div class="form-group">
+                    <label>Limit (optional):</label>
+                    <input type="number" name="limit" placeholder="20" min="1" max="100">
+                  </div>
+                  <div class="form-group">
+                    <label>Sort by:</label>
+                    <select name="sort_by">
+                      <option value="created_at">created_at</option>
+                      <option value="name">name</option>
+                      <option value="updated_at">updated_at</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Sort order:</label>
+                    <select name="sort_order">
+                      <option value="desc">desc</option>
+                      <option value="asc">asc</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn">Test GET Categories</button>
+                </form>
+                <div id="get-categories-response" class="response hidden"></div>
+              </div>
+
+              <!-- POST Category -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-post">POST</span>
+                  <span>/api/categories</span>
+                </div>
+                <form onsubmit="testEndpoint(event, 'POST', '/api/categories', 'post-category-response')">
+                  <div class="form-group">
+                    <label>Name (required):</label>
+                    <input type="text" name="name" placeholder="Czasowniki" required>
+                  </div>
+                  <button type="submit" class="btn">Test POST Category</button>
+                </form>
+                <div id="post-category-response" class="response hidden"></div>
+              </div>
+
+              <!-- GET Category by ID -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-get">GET</span>
+                  <span>/api/categories/{id}</span>
+                </div>
+                <form onsubmit="testEndpointWithId(event, 'GET', '/api/categories', 'get-category-response')">
+                  <div class="form-group">
+                    <label>Category ID (required):</label>
+                    <input type="text" name="id" placeholder="UUID of the category" required>
+                  </div>
+                  <button type="submit" class="btn">Test GET Category</button>
+                </form>
+                <div id="get-category-response" class="response hidden"></div>
+              </div>
+
+              <!-- PUT Category -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-put">PUT</span>
+                  <span>/api/categories/{id}</span>
+                </div>
+                <form onsubmit="testEndpointWithId(event, 'PUT', '/api/categories', 'put-category-response')">
+                  <div class="form-group">
+                    <label>Category ID (required):</label>
+                    <input type="text" name="id" placeholder="UUID of the category" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Name (optional):</label>
+                    <input type="text" name="name" placeholder="Updated category name">
+                  </div>
+                  <button type="submit" class="btn">Test PUT Category</button>
+                </form>
+                <div id="put-category-response" class="response hidden"></div>
+              </div>
+
+              <!-- DELETE Category -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-delete">DELETE</span>
+                  <span>/api/categories/{id}</span>
+                </div>
+                <form onsubmit="testEndpointWithId(event, 'DELETE', '/api/categories', 'delete-category-response')">
+                  <div class="form-group">
+                    <label>Category ID (required):</label>
+                    <input type="text" name="id" placeholder="UUID of the category" required>
+                  </div>
+                  <button type="submit" class="btn">Test DELETE Category</button>
+                </form>
+                <div id="delete-category-response" class="response hidden"></div>
+              </div>
+
+              <!-- GET Flashcards -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-get">GET</span>
+                  <span>/api/flashcards</span>
+                </div>
+                <form onsubmit="testEndpoint(event, 'GET', '/api/flashcards', 'get-flashcards-response')">
+                  <div class="form-group">
+                    <label>Page (optional):</label>
+                    <input type="number" name="page" placeholder="1" min="1">
+                  </div>
+                  <div class="form-group">
+                    <label>Limit (optional):</label>
+                    <input type="number" name="limit" placeholder="20" min="1" max="100">
+                  </div>
+                  <div class="form-group">
+                    <label>Sort by:</label>
+                    <select name="sort_by">
+                      <option value="created_at">created_at</option>
+                      <option value="front">front</option>
+                      <option value="updated_at">updated_at</option>
+                      <option value="next_review_date">next_review_date</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Sort order:</label>
+                    <select name="sort_order">
+                      <option value="desc">desc</option>
+                      <option value="asc">asc</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Collection ID (optional filter):</label>
+                    <input type="text" name="collection_id" placeholder="UUID of collection">
+                  </div>
+                  <div class="form-group">
+                    <label>Category ID (optional filter):</label>
+                    <input type="text" name="category_id" placeholder="UUID of category">
+                  </div>
+                  <button type="submit" class="btn">Test GET Flashcards</button>
+                </form>
+                <div id="get-flashcards-response" class="response hidden"></div>
+              </div>
+
+              <!-- POST Flashcard -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-post">POST</span>
+                  <span>/api/flashcards</span>
+                </div>
+                <form onsubmit="testEndpoint(event, 'POST', '/api/flashcards', 'post-flashcard-response')">
+                  <div class="form-group">
+                    <label>Front (required):</label>
+                    <input type="text" name="front" placeholder="Hello" required maxlength="200">
+                  </div>
+                  <div class="form-group">
+                    <label>Back (required):</label>
+                    <textarea name="back" placeholder="Hola" required maxlength="500" rows="3"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>Collection ID (required):</label>
+                    <input type="text" name="collection_id" placeholder="UUID of collection" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Category ID (optional):</label>
+                    <input type="text" name="category_id" placeholder="UUID of category">
+                  </div>
+                  <div class="form-group">
+                    <label>Source:</label>
+                    <select name="source">
+                      <option value="manual">manual</option>
+                      <option value="ai_generated">ai_generated</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn">Test POST Flashcard</button>
+                </form>
+                <div id="post-flashcard-response" class="response hidden"></div>
+              </div>
+
+              <!-- POST Bulk Flashcards -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-post">POST</span>
+                  <span>/api/flashcards/bulk</span>
+                </div>
+                <form onsubmit="testBulkFlashcards(event)">
+                  <div class="form-group">
+                    <label>Collection ID (required):</label>
+                    <input type="text" id="bulk-collection-id" placeholder="UUID of collection" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Category ID (optional):</label>
+                    <input type="text" id="bulk-category-id" placeholder="UUID of category">
+                  </div>
+                  <div class="form-group">
+                    <label>Flashcards JSON (required):</label>
+                    <textarea id="bulk-flashcards" placeholder='{"flashcards": [{"front": "Hello", "back": "Hola"}, {"front": "Goodbye", "back": "Adiós"}]}' rows="6" required></textarea>
+                    <small style="opacity: 0.7;">Enter JSON with "flashcards" array. Collection/category will be added automatically.</small>
+                  </div>
+                  <button type="submit" class="btn">Test POST Bulk Flashcards</button>
+                </form>
+                <div id="post-bulk-flashcards-response" class="response hidden"></div>
+              </div>
+
+              <!-- GET Flashcard by ID -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-get">GET</span>
+                  <span>/api/flashcards/{id}</span>
+                </div>
+                <form onsubmit="testEndpointWithId(event, 'GET', '/api/flashcards', 'get-flashcard-response')">
+                  <div class="form-group">
+                    <label>Flashcard ID (required):</label>
+                    <input type="text" name="id" placeholder="UUID of the flashcard" required>
+                  </div>
+                  <button type="submit" class="btn">Test GET Flashcard</button>
+                </form>
+                <div id="get-flashcard-response" class="response hidden"></div>
+              </div>
+
+              <!-- PUT Flashcard -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-put">PUT</span>
+                  <span>/api/flashcards/{id}</span>
+                </div>
+                <form onsubmit="testEndpointWithId(event, 'PUT', '/api/flashcards', 'put-flashcard-response')">
+                  <div class="form-group">
+                    <label>Flashcard ID (required):</label>
+                    <input type="text" name="id" placeholder="UUID of the flashcard" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Front (optional):</label>
+                    <input type="text" name="front" placeholder="Updated front text" maxlength="200">
+                  </div>
+                  <div class="form-group">
+                    <label>Back (optional):</label>
+                    <textarea name="back" placeholder="Updated back text" maxlength="500" rows="3"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>Collection ID (optional):</label>
+                    <input type="text" name="collection_id" placeholder="UUID of collection">
+                  </div>
+                  <div class="form-group">
+                    <label>Category ID (optional):</label>
+                    <input type="text" name="category_id" placeholder="UUID of category">
+                  </div>
+                  <button type="submit" class="btn">Test PUT Flashcard</button>
+                </form>
+                <div id="put-flashcard-response" class="response hidden"></div>
+              </div>
+
+              <!-- DELETE Flashcard -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-delete">DELETE</span>
+                  <span>/api/flashcards/{id}</span>
+                </div>
+                <form onsubmit="testEndpointWithId(event, 'DELETE', '/api/flashcards', 'delete-flashcard-response')">
+                  <div class="form-group">
+                    <label>Flashcard ID (required):</label>
+                    <input type="text" name="id" placeholder="UUID of the flashcard" required>
+                  </div>
+                  <button type="submit" class="btn">Test DELETE Flashcard</button>
+                </form>
+                <div id="delete-flashcard-response" class="response hidden"></div>
+              </div>
+
+              <!-- POST Generate Flashcards -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-post">POST</span>
+                  <span>/api/generate/flashcards</span>
+                </div>
+                <form onsubmit="testEndpoint(event, 'POST', '/api/generate/flashcards', 'generate-flashcards-response')">
+                  <div class="form-group">
+                    <label>Text (required, 100-10000 chars):</label>
+                    <textarea name="text" placeholder="Enter text to generate flashcards from..." required minlength="100" maxlength="10000" rows="6"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>Collection ID (required):</label>
+                    <input type="text" name="collection_id" placeholder="UUID of collection" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Category ID (optional):</label>
+                    <input type="text" name="category_id" placeholder="UUID of category">
+                  </div>
+                  <div class="form-group">
+                    <label>Max Cards:</label>
+                    <input type="number" name="max_cards" placeholder="10" min="1" max="20" value="10">
+                  </div>
+                  <button type="submit" class="btn">Test Generate Flashcards</button>
+                </form>
+                <div id="generate-flashcards-response" class="response hidden"></div>
+              </div>
+
+              <!-- POST Accept Generated Flashcards -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-post">POST</span>
+                  <span>/api/generate/flashcards/{id}/accept</span>
+                </div>
+                <form onsubmit="testAcceptFlashcards(event)">
+                  <div class="form-group">
+                    <label>Generation ID (required):</label>
+                    <input type="text" id="accept-generation-id" placeholder="UUID from generation response" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Collection ID (required):</label>
+                    <input type="text" id="accept-collection-id" placeholder="UUID of collection" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Category ID (optional):</label>
+                    <input type="text" id="accept-category-id" placeholder="UUID of category">
+                  </div>
+                  <div class="form-group">
+                    <label>Accepted Cards JSON (required):</label>
+                    <textarea id="accept-cards" placeholder='{"accepted_cards": [{"front": "Question", "back": "Answer", "edited": false}]}' rows="6" required></textarea>
+                    <small style="opacity: 0.7;">Enter JSON with "accepted_cards" array. Each card needs "front", "back", and "edited" fields.</small>
+                  </div>
+                  <button type="submit" class="btn">Test Accept Flashcards</button>
+                </form>
+                <div id="accept-flashcards-response" class="response hidden"></div>
+              </div>
+
+              <!-- Statistics API Section -->
+              <div class="section-title">📊 Statistics API</div>
+
+              <!-- GET Generation Statistics -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-get">GET</span>
+                  <span>/api/stats/generation</span>
+                </div>
+                <form onsubmit="testEndpoint(event, 'GET', '/api/stats/generation', 'get-generation-stats-response')">
+                  <p style="margin-bottom: 1rem; opacity: 0.8;">Get AI generation statistics for the current user.</p>
+                  <button type="submit" class="btn">Test Get Generation Stats</button>
+                </form>
+                <div id="get-generation-stats-response" class="response hidden"></div>
+              </div>
+
+              <!-- PUT Generation Statistics -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-put">PUT</span>
+                  <span>/api/stats/generation</span>
+                </div>
+                <form onsubmit="testEndpoint(event, 'PUT', '/api/stats/generation', 'put-generation-stats-response')">
+                  <div class="form-group">
+                    <label>Total Generated (optional):</label>
+                    <input type="number" name="total_generated" placeholder="100" min="0">
+                  </div>
+                  <div class="form-group">
+                    <label>Total Accepted Direct (optional):</label>
+                    <input type="number" name="total_accepted_direct" placeholder="80" min="0">
+                  </div>
+                  <div class="form-group">
+                    <label>Total Accepted Edited (optional):</label>
+                    <input type="number" name="total_accepted_edited" placeholder="15" min="0">
+                  </div>
+                  <button type="submit" class="btn">Test Update Generation Stats</button>
+                </form>
+                <div id="put-generation-stats-response" class="response hidden"></div>
+              </div>
+
+              <!-- GET Learning Statistics -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-get">GET</span>
+                  <span>/api/stats/learning</span>
+                </div>
+                <form onsubmit="testEndpoint(event, 'GET', '/api/stats/learning', 'get-learning-stats-response')">
+                  <div class="form-group">
+                    <label>Collection ID (optional):</label>
+                    <input type="text" name="collection_id" placeholder="UUID of specific collection">
+                  </div>
+                  <div class="form-group">
+                    <label>Period:</label>
+                    <select name="period">
+                      <option value="all">All Time</option>
+                      <option value="week">Last Week</option>
+                      <option value="month">Last Month</option>
+                      <option value="year">Last Year</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn">Test Get Learning Stats</button>
+                </form>
+                <div id="get-learning-stats-response" class="response hidden"></div>
+              </div>
+
+              <!-- Study Session API Section -->
+              <div class="section-title">📖 Study Session API</div>
+
+              <!-- POST Start Study Session -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-post">POST</span>
+                  <span>/api/study/next</span>
+                </div>
+                <form onsubmit="testEndpoint(event, 'POST', '/api/study/next', 'post-study-next-response')">
+                  <div class="form-group">
+                    <label>Collection ID (required):</label>
+                    <input type="text" name="collection_id" placeholder="UUID of collection" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Session Type:</label>
+                    <select name="session_type">
+                      <option value="mixed">Mixed (Review + Learn)</option>
+                      <option value="review">Review Only</option>
+                      <option value="learn">Learn New</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Max Cards (optional):</label>
+                    <input type="number" name="max_cards" placeholder="20" min="1" max="50">
+                  </div>
+                  <button type="submit" class="btn">Start Study Session</button>
+                </form>
+                <div id="post-study-next-response" class="response hidden"></div>
+              </div>
+
+              <!-- POST Review Flashcard -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-post">POST</span>
+                  <span>/api/study/sessions/{id}/review</span>
+                </div>
+                <form onsubmit="testStudyReview(event)">
+                  <div class="form-group">
+                    <label>Session ID (required):</label>
+                    <input type="text" id="review-session-id" placeholder="UUID of study session" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Flashcard ID (required):</label>
+                    <input type="text" id="review-flashcard-id" placeholder="UUID of flashcard" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Quality (0-5 scale):</label>
+                    <select id="review-quality" required>
+                      <option value="">Select quality</option>
+                      <option value="0">0 - Complete blackout</option>
+                      <option value="1">1 - Incorrect, easy to recall correct answer</option>
+                      <option value="2">2 - Incorrect, difficult to recall correct answer</option>
+                      <option value="3">3 - Correct with serious difficulty</option>
+                      <option value="4">4 - Correct after hesitation</option>
+                      <option value="5">5 - Perfect response</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Response Time (ms, optional):</label>
+                    <input type="number" id="review-response-time" placeholder="3000" min="0">
+                  </div>
+                  <div class="form-group">
+                    <label>Difficulty Felt (optional):</label>
+                    <select id="review-difficulty">
+                      <option value="">Not specified</option>
+                      <option value="very_easy">Very Easy</option>
+                      <option value="easy">Easy</option>
+                      <option value="normal">Normal</option>
+                      <option value="hard">Hard</option>
+                      <option value="very_hard">Very Hard</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn">Review Flashcard</button>
+                </form>
+                <div id="post-study-review-response" class="response hidden"></div>
+              </div>
+
+              <!-- PUT Complete Study Session -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span class="method-badge method-put">PUT</span>
+                  <span>/api/study/sessions/{id}/complete</span>
+                </div>
+                <form onsubmit="testStudyComplete(event)">
+                  <div class="form-group">
+                    <label>Session ID (required):</label>
+                    <input type="text" id="complete-session-id" placeholder="UUID of study session" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Session Duration (ms, required):</label>
+                    <input type="number" id="complete-duration" placeholder="300000" min="0" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Cards Reviewed (required):</label>
+                    <input type="number" id="complete-cards-reviewed" placeholder="10" min="0" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Accuracy Rate (0-1, optional):</label>
+                    <input type="number" id="complete-accuracy" placeholder="0.85" min="0" max="1" step="0.01">
+                  </div>
+                  <button type="submit" class="btn">Complete Session</button>
+                </form>
+                <div id="put-study-complete-response" class="response hidden"></div>
+              </div>
+
+              <!-- API Documentation Link -->
+              <div class="endpoint-card">
+                <div class="endpoint-title">
+                  <span>📚 API Documentation</span>
+                </div>
+                <p style="margin-bottom: 1rem; opacity: 0.9;">
+                  OpenAPI specification is available for import into Postman, Insomnia, or other API clients.
+                </p>
+                <a href="/api-docs.json" target="_blank" class="btn" style="text-decoration: none; display: inline-block;">
+                  View OpenAPI Spec
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Test endpoint function
+      window.testEndpoint = async function(event, method, endpoint, responseId) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        const responseDiv = document.getElementById(responseId);
+        
+        let url = endpoint;
+        const params = new URLSearchParams();
+        
+        // Build query params for GET requests
+        if (method === 'GET') {
+          for (let [key, value] of formData.entries()) {
+            if (value.trim()) {
+              params.append(key, value);
+            }
+          }
+          if (params.toString()) {
+            url += '?' + params.toString();
+          }
+        }
+        
+        // Get current session for authorization
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        
+        const requestOptions = {
+          method,
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            ...(session?.access_token && {
+              'Authorization': `Bearer ${session.access_token}`
+            })
+          }
+        };
+        
+        // Add body for POST/PUT requests
+        if (method === 'POST' || method === 'PUT') {
+          const body = {};
+          for (let [key, value] of formData.entries()) {
+            if (value.trim()) {
+              // Convert numeric fields to numbers for specific endpoints
+              if (key === 'max_cards' && (endpoint.includes('/api/generate/flashcards') || endpoint.includes('/api/study/next'))) {
+                body[key] = parseInt(value, 10);
+              } else if (endpoint.includes('/api/stats/generation') && 
+                        ['total_generated', 'total_accepted_direct', 'total_accepted_edited'].includes(key)) {
+                body[key] = parseInt(value, 10);
+              } else {
+                body[key] = value;
+              }
+            }
+          }
+          requestOptions.body = JSON.stringify(body);
+        }
+        
+        try {
+          responseDiv.innerHTML = '<div class="response-status">Loading...</div>';
+          responseDiv.classList.remove('hidden');
+          
+          const response = await fetch(url, requestOptions);
+          const status = response.status;
+          const statusClass = 'status-' + status;
+          
+          let responseText;
+          try {
+            const responseJson = await response.json();
+            responseText = JSON.stringify(responseJson, null, 2);
+          } catch {
+            responseText = await response.text();
+          }
+          
+          responseDiv.innerHTML = 
+            '<div class="response-status ' + statusClass + '">' +
+              method + ' ' + url + ' - ' + status + ' ' + response.statusText +
+            '</div>' +
+            '<pre>' + responseText + '</pre>';
+        } catch (error) {
+          responseDiv.innerHTML = 
+            '<div class="response-status status-500">' +
+              'Error: ' + error.message +
+            '</div>';
+        }
+      };
+
+      // Test endpoint with ID function
+      window.testEndpointWithId = async function(event, method, baseEndpoint, responseId) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        const id = formData.get('id');
+        
+        if (!id) {
+          alert('ID is required');
+          return;
+        }
+        
+        const endpoint = baseEndpoint + '/' + id;
+        
+        // Remove ID from form data for body
+        formData.delete('id');
+        
+        // Get current session for authorization
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        
+        const requestOptions = {
+          method,
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            ...(session?.access_token && {
+              'Authorization': `Bearer ${session.access_token}`
+            })
+          }
+        };
+        
+        if (method === 'PUT') {
+          const body = {};
+          for (let [key, value] of formData.entries()) {
+            if (value.trim()) {
+              body[key] = value;
+            }
+          }
+          if (Object.keys(body).length > 0) {
+            requestOptions.body = JSON.stringify(body);
+          }
+        }
+        
+        const responseDiv = document.getElementById(responseId);
+        
+        try {
+          responseDiv.innerHTML = '<div class="response-status">Loading...</div>';
+          responseDiv.classList.remove('hidden');
+          
+          const response = await fetch(endpoint, requestOptions);
+          const status = response.status;
+          const statusClass = 'status-' + status;
+          
+          let responseText;
+          if (status === 204) {
+            responseText = '(No Content)';
+          } else {
+            try {
+              const responseJson = await response.json();
+              responseText = JSON.stringify(responseJson, null, 2);
+            } catch {
+              responseText = await response.text();
+            }
+          }
+          
+          responseDiv.innerHTML = 
+            '<div class="response-status ' + statusClass + '">' +
+              method + ' ' + endpoint + ' - ' + status + ' ' + response.statusText +
+            '</div>' +
+            '<pre>' + responseText + '</pre>';
+        } catch (error) {
+          responseDiv.innerHTML = 
+            '<div class="response-status status-500">' +
+              'Error: ' + error.message +
+            '</div>';
+        }
+      };
+
+      // Test bulk flashcards function
+      window.testBulkFlashcards = async function(event) {
+        event.preventDefault();
+        
+        const collectionId = document.getElementById('bulk-collection-id').value;
+        const categoryId = document.getElementById('bulk-category-id').value;
+        const flashcardsText = document.getElementById('bulk-flashcards').value;
+        const responseDiv = document.getElementById('post-bulk-flashcards-response');
+        
+        if (!collectionId) {
+          alert('Collection ID is required');
+          return;
+        }
+        
+        if (!flashcardsText) {
+          alert('Flashcards JSON is required');
+          return;
+        }
+        
+        try {
+          // Parse the JSON input
+          let flashcardsData;
+          try {
+            flashcardsData = JSON.parse(flashcardsText);
+          } catch (parseError) {
+            responseDiv.innerHTML = 
+              '<div class="response-status status-400">' +
+                'Invalid JSON format: ' + parseError.message +
+              '</div>';
+            responseDiv.classList.remove('hidden');
+            return;
+          }
+          
+          // Add collection_id and category_id to each flashcard
+          if (flashcardsData.flashcards && Array.isArray(flashcardsData.flashcards)) {
+            flashcardsData.flashcards = flashcardsData.flashcards.map(card => ({
+              ...card,
+              collection_id: collectionId,
+              ...(categoryId && { category_id: categoryId })
+            }));
+          } else {
+            responseDiv.innerHTML = 
+              '<div class="response-status status-400">' +
+                'JSON must contain "flashcards" array' +
+              '</div>';
+            responseDiv.classList.remove('hidden');
+            return;
+          }
+          
+          // Get current session for authorization
+          const { data: { session } } = await supabaseClient.auth.getSession();
+          
+          responseDiv.innerHTML = '<div class="response-status">Loading...</div>';
+          responseDiv.classList.remove('hidden');
+          
+          const response = await fetch('/api/flashcards/bulk', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest',
+              ...(session?.access_token && {
+                'Authorization': `Bearer ${session.access_token}`
+              })
+            },
+            body: JSON.stringify(flashcardsData)
+          });
+          
+          const status = response.status;
+          const statusClass = 'status-' + status;
+          
+          let responseText;
+          try {
+            const responseJson = await response.json();
+            responseText = JSON.stringify(responseJson, null, 2);
+          } catch {
+            responseText = await response.text();
+          }
+          
+          responseDiv.innerHTML = 
+            '<div class="response-status ' + statusClass + '">' +
+              'POST /api/flashcards/bulk - ' + status + ' ' + response.statusText +
+            '</div>' +
+            '<pre>' + responseText + '</pre>';
+        } catch (error) {
+          responseDiv.innerHTML = 
+            '<div class="response-status status-500">' +
+              'Error: ' + error.message +
+            '</div>';
+        }
+      };
+
+      // Test accept flashcards function
+      window.testAcceptFlashcards = async function(event) {
+        event.preventDefault();
+        
+        const generationId = document.getElementById('accept-generation-id').value;
+        const collectionId = document.getElementById('accept-collection-id').value;
+        const categoryId = document.getElementById('accept-category-id').value;
+        const cardsText = document.getElementById('accept-cards').value;
+        const responseDiv = document.getElementById('accept-flashcards-response');
+        
+        if (!generationId) {
+          alert('Generation ID is required');
+          return;
+        }
+        
+        if (!collectionId) {
+          alert('Collection ID is required');
+          return;
+        }
+        
+        if (!cardsText) {
+          alert('Accepted Cards JSON is required');
+          return;
+        }
+        
+        try {
+          // Parse the JSON input
+          let cardsData;
+          try {
+            cardsData = JSON.parse(cardsText);
+          } catch (parseError) {
+            responseDiv.innerHTML = 
+              '<div class="response-status status-400">' +
+                'Invalid JSON format: ' + parseError.message +
+              '</div>';
+            responseDiv.classList.remove('hidden');
+            return;
+          }
+          
+          // Add collection_id and category_id
+          const requestBody = {
+            ...cardsData,
+            collection_id: collectionId,
+            ...(categoryId && { category_id: categoryId })
+          };
+          
+          // Get current session for authorization
+          const { data: { session } } = await supabaseClient.auth.getSession();
+          
+          responseDiv.innerHTML = '<div class="response-status">Loading...</div>';
+          responseDiv.classList.remove('hidden');
+          
+          const endpoint = `/api/generate/flashcards/${generationId}/accept`;
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest',
+              ...(session?.access_token && {
+                'Authorization': `Bearer ${session.access_token}`
+              })
+            },
+            body: JSON.stringify(requestBody)
+          });
+          
+          const status = response.status;
+          const statusClass = 'status-' + status;
+          
+          let responseText;
+          try {
+            const responseJson = await response.json();
+            responseText = JSON.stringify(responseJson, null, 2);
+          } catch {
+            responseText = await response.text();
+          }
+          
+          responseDiv.innerHTML = 
+            '<div class="response-status ' + statusClass + '">' +
+              'POST ' + endpoint + ' - ' + status + ' ' + response.statusText +
+            '</div>' +
+            '<pre>' + responseText + '</pre>';
+        } catch (error) {
+          responseDiv.innerHTML = 
+            '<div class="response-status status-500">' +
+              'Error: ' + error.message +
+            '</div>';
+        }
+      };
+
+      // Test study review function
+      window.testStudyReview = async function(event) {
+        event.preventDefault();
+        const sessionId = document.getElementById('review-session-id').value;
+        const flashcardId = document.getElementById('review-flashcard-id').value;
+        const quality = document.getElementById('review-quality').value;
+        const responseTime = document.getElementById('review-response-time').value;
+        const difficulty = document.getElementById('review-difficulty').value;
+        
+        if (!sessionId || !flashcardId || quality === '') {
+          alert('Session ID, Flashcard ID, and Quality are required');
+          return;
+        }
+        
+        const reviewData = {
+          flashcard_id: flashcardId,
+          quality: parseInt(quality, 10)
+        };
+        
+        if (responseTime) {
+          reviewData.response_time_ms = parseInt(responseTime, 10);
+        }
+        
+        if (difficulty) {
+          reviewData.difficulty_felt = difficulty;
+        }
+        
+        const responseDiv = document.getElementById('post-study-review-response');
+        
+        // Get current session for authorization
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        
+        const requestOptions = {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            ...(session?.access_token && {
+              'Authorization': `Bearer ${session.access_token}`
+            })
+          },
+          body: JSON.stringify(reviewData)
+        };
+        
+        try {
+          responseDiv.innerHTML = '<div class="response-status">Loading...</div>';
+          responseDiv.classList.remove('hidden');
+          
+          const url = `/api/study/sessions/${sessionId}/review`;
+          const response = await fetch(url, requestOptions);
+          const status = response.status;
+          const statusClass = 'status-' + status;
+          
+          let responseText;
+          try {
+            const responseJson = await response.json();
+            responseText = JSON.stringify(responseJson, null, 2);
+          } catch {
+            responseText = await response.text();
+          }
+          
+          responseDiv.innerHTML = 
+            '<div class="response-status ' + statusClass + '">' +
+              'POST ' + url + ' - ' + status + ' ' + response.statusText +
+            '</div>' +
+            '<pre>' + responseText + '</pre>';
+        } catch (error) {
+          responseDiv.innerHTML = 
+            '<div class="response-status status-500">' +
+              'Error: ' + error.message +
+            '</div>';
+        }
+      };
+
+      // Test study complete function
+      window.testStudyComplete = async function(event) {
+        event.preventDefault();
+        const sessionId = document.getElementById('complete-session-id').value;
+        const duration = document.getElementById('complete-duration').value;
+        const cardsReviewed = document.getElementById('complete-cards-reviewed').value;
+        const accuracy = document.getElementById('complete-accuracy').value;
+        
+        if (!sessionId || !duration || !cardsReviewed) {
+          alert('Session ID, Duration, and Cards Reviewed are required');
+          return;
+        }
+        
+        const completeData = {
+          session_duration_ms: parseInt(duration, 10),
+          cards_reviewed: parseInt(cardsReviewed, 10)
+        };
+        
+        if (accuracy) {
+          completeData.accuracy_rate = parseFloat(accuracy);
+        }
+        
+        const responseDiv = document.getElementById('put-study-complete-response');
+        
+        // Get current session for authorization
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        
+        const requestOptions = {
+          method: 'PUT',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            ...(session?.access_token && {
+              'Authorization': `Bearer ${session.access_token}`
+            })
+          },
+          body: JSON.stringify(completeData)
+        };
+        
+        try {
+          responseDiv.innerHTML = '<div class="response-status">Loading...</div>';
+          responseDiv.classList.remove('hidden');
+          
+          const url = `/api/study/sessions/${sessionId}/complete`;
+          const response = await fetch(url, requestOptions);
+          const status = response.status;
+          const statusClass = 'status-' + status;
+          
+          let responseText;
+          try {
+            const responseJson = await response.json();
+            responseText = JSON.stringify(responseJson, null, 2);
+          } catch {
+            responseText = await response.text();
+          }
+          
+          responseDiv.innerHTML = 
+            '<div class="response-status ' + statusClass + '">' +
+              'PUT ' + url + ' - ' + status + ' ' + response.statusText +
+            '</div>' +
+            '<pre>' + responseText + '</pre>';
+        } catch (error) {
+          responseDiv.innerHTML = 
+            '<div class="response-status status-500">' +
+              'Error: ' + error.message +
+            '</div>';
+        }
+      };
+
+      // Authentication logic
+      async function checkAuth() {
+        try {
+          const { data: { session }, error } = await supabaseClient.auth.getSession();
+          
+          if (error) {
+            console.error('Auth error:', error);
+            showLoginRequired();
+            return;
+          }
+
+          if (session && session.user) {
+            currentUser = session.user;
+            showTestInterface(currentUser);
+          } else {
+            showLoginRequired();
+          }
+        } catch (error) {
+          console.error('Error checking auth:', error);
+          showLoginRequired();
+        }
+      }
+
+      // Listen for auth state changes
+      supabaseClient.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          if (session && session.user) {
+            currentUser = session.user;
+            showTestInterface(currentUser);
+          }
+        } else if (event === 'SIGNED_OUT') {
+          currentUser = null;
+          showLoginRequired();
+        }
+      });
+
+      // Initialize
+      checkAuth();
+    });
+  </script>
+</body>
+</html> 

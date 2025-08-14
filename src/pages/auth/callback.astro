@@ -1,0 +1,21 @@
+---
+import { supabase } from '../../db/supabase';
+
+const code = Astro.url.searchParams.get('code');
+const next = Astro.url.searchParams.get('next') || '/';
+
+if (code) {
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
+  if (!error) {
+    return Astro.redirect(next);
+  }
+}
+
+// If there's no code or there was an error, redirect to home
+return Astro.redirect('/');
+---
+
+<script>
+  // Fallback client-side redirect
+  window.location.href = '/';
+</script> 
