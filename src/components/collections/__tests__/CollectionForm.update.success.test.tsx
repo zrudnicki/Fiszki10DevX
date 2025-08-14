@@ -47,11 +47,13 @@ describe("CollectionForm - update success", () => {
     const submit = await screen.findByRole("button", { name: /Zapisz zmiany|Zapisywanie/ });
     await user.click(submit);
 
-    expect(updateCollectionMock).toHaveBeenCalledWith("user-1", "col-1", expect.objectContaining({ name: "Nowa nazwa" }));
+    expect(updateCollectionMock).toHaveBeenCalledWith(
+      "user-1",
+      "col-1",
+      expect.objectContaining({ name: "Nowa nazwa" })
+    );
     expect(navigatedTo).toBe("/dashboard/collections");
 
     Object.defineProperty(window, "location", { configurable: true, value: originalLocation });
   });
 });
-
-

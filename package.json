@@ -9,6 +9,7 @@
     "astro": "astro",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "lint:ci": "eslint \"src/components/**/__tests__/**\" \"src/components/categories/__tests__/**\" \"src/components/collections/__tests__/**\"",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

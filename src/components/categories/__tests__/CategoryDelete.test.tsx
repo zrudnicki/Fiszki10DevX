@@ -52,7 +52,3 @@ describe("CategoryTableRow delete (SC-CAT-04)", () => {
     expect(onDelete).toHaveBeenCalledWith("c1");
   });
 });
-
-
-
-

@@ -39,11 +39,13 @@ export const learningStatsResponseSchema = z.object({
   total_reviews: z.number(),
   accuracy_rate: z.number(),
   average_session_time: z.number(),
-  reviews_by_period: z.array(z.object({
-    date: z.string(),
-    count: z.number(),
-    accuracy: z.number(),
-  })),
+  reviews_by_period: z.array(
+    z.object({
+      date: z.string(),
+      count: z.number(),
+      accuracy: z.number(),
+    })
+  ),
 });
 
 /**
@@ -53,4 +55,4 @@ export type GenerationStatsRequest = z.infer<typeof generationStatsSchema>;
 export type UpdateGenerationStatsRequest = z.infer<typeof updateGenerationStatsSchema>;
 export type LearningStatsQuery = z.infer<typeof learningStatsQuerySchema>;
 export type GenerationStatsResponse = z.infer<typeof generationStatsResponseSchema>;
-export type LearningStatsResponse = z.infer<typeof learningStatsResponseSchema>; 
+export type LearningStatsResponse = z.infer<typeof learningStatsResponseSchema>;

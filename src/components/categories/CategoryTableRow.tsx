@@ -39,10 +39,7 @@ export const CategoryTableRow: React.FC<CategoryTableRowProps> = ({ category, on
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
         <div className="flex justify-end space-x-2">
-          <a
-            href={`/dashboard/categories/${category.id}/edit`}
-            className="text-blue-400 hover:text-blue-300"
-          >
+          <a href={`/dashboard/categories/${category.id}/edit`} className="text-blue-400 hover:text-blue-300">
             Edytuj
           </a>
           <button
@@ -56,4 +53,4 @@ export const CategoryTableRow: React.FC<CategoryTableRowProps> = ({ category, on
       </td>
     </tr>
   );
-}; 
+};

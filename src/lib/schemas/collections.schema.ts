@@ -1,44 +1,30 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // Request schemas
 export const createCollectionSchema = z.object({
-  name: z.string()
-    .min(1, 'Name is required')
-    .max(100, 'Name must be at most 100 characters'),
-  description: z.string()
-    .max(500, 'Description must be at most 500 characters')
-    .optional()
-    .nullable(),
+  name: z.string().min(1, "Name is required").max(100, "Name must be at most 100 characters"),
+  description: z.string().max(500, "Description must be at most 500 characters").optional().nullable(),
 });
 
-export const updateCollectionSchema = z.object({
-  name: z.string()
-    .min(1, 'Name is required')
-    .max(100, 'Name must be at most 100 characters')
-    .optional(),
-  description: z.string()
-    .max(500, 'Description must be at most 500 characters')
-    .optional()
-    .nullable(),
-}).refine(data => Object.keys(data).length > 0, {
-  message: 'At least one field must be provided for update',
-});
+export const updateCollectionSchema = z
+  .object({
+    name: z.string().min(1, "Name is required").max(100, "Name must be at most 100 characters").optional(),
+    description: z.string().max(500, "Description must be at most 500 characters").optional().nullable(),
+  })
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provided for update",
+  });
 
 // Query parameters schemas
 export const collectionsListQuerySchema = z.object({
-  limit: z.coerce.number()
-    .min(1, 'Limit must be at least 1')
-    .max(100, 'Limit must be at most 100')
-    .default(50),
-  offset: z.coerce.number()
-    .min(0, 'Offset must be non-negative')
-    .default(0),
-  sort: z.enum(['name', 'created_at']).default('created_at'),
-  order: z.enum(['asc', 'desc']).default('desc'),
+  limit: z.coerce.number().min(1, "Limit must be at least 1").max(100, "Limit must be at most 100").default(50),
+  offset: z.coerce.number().min(0, "Offset must be non-negative").default(0),
+  sort: z.enum(["name", "created_at"]).default("created_at"),
+  order: z.enum(["asc", "desc"]).default("desc"),
 });
 
 export const collectionIdSchema = z.object({
-  id: z.string().uuid('Invalid collection ID format'),
+  id: z.string().uuid("Invalid collection ID format"),
 });
 
 // Response schemas
@@ -66,4 +52,4 @@ export type UpdateCollectionRequest = z.infer<typeof updateCollectionSchema>;
 export type CollectionsListQuery = z.infer<typeof collectionsListQuerySchema>;
 export type CollectionId = z.infer<typeof collectionIdSchema>;
 export type CollectionDTO = z.infer<typeof collectionDTOSchema>;
-export type CollectionsListResponse = z.infer<typeof collectionsListResponseSchema>; 
+export type CollectionsListResponse = z.infer<typeof collectionsListResponseSchema>;

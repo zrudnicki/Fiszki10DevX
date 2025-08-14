@@ -118,9 +118,7 @@ export const CollectionForm: React.FC<CollectionFormProps> = ({ collectionId }) 
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-2xl">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-white">
-            {collection ? "Edytuj kolekcję" : "Nowa kolekcja"}
-          </h1>
+          <h1 className="text-2xl font-bold text-white">{collection ? "Edytuj kolekcję" : "Nowa kolekcja"}</h1>
         </div>
         <div className="bg-white/5 rounded-lg p-8 shadow-md">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -172,4 +170,4 @@ export const CollectionForm: React.FC<CollectionFormProps> = ({ collectionId }) 
       </div>
     </div>
   );
-}; 
+};

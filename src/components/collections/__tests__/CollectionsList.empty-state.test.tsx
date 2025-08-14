@@ -31,5 +31,3 @@ describe("CollectionsList - empty state", () => {
     expect(screen.getByRole("link", { name: "Dodaj kolekcję" })).toHaveAttribute("href", "/dashboard/collections/new");
   });
 });
-
-

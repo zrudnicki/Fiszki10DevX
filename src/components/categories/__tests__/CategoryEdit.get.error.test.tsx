@@ -28,6 +28,3 @@ describe("CategoryEdit - get error", () => {
     expect(screen.getByText("Nie znaleziono kategorii.")).toBeInTheDocument();
   });
 });
-
-
-

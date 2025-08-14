@@ -1,6 +1,6 @@
 /**
  * Spaced Repetition Algorithm - Based on SuperMemo SM-2
- * 
+ *
  * This implementation calculates the next review date and parameters
  * for flashcards based on the user's performance.
  */
@@ -25,7 +25,7 @@ export interface SpacedRepetitionResult {
  */
 export function calculateNextReview(params: SpacedRepetitionParams): SpacedRepetitionResult {
   const { quality, repetition_count, ease_factor, interval_days } = params;
-  
+
   // If quality < 3, card is failed - repeat today and reset repetition count
   if (quality < 3) {
     return {
@@ -38,17 +38,14 @@ export function calculateNextReview(params: SpacedRepetitionParams): SpacedRepet
   }
 
   // Calculate new ease factor
-  const newEaseFactor = Math.max(
-    1.3,
-    ease_factor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
-  );
+  const newEaseFactor = Math.max(1.3, ease_factor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
 
   // Calculate new repetition count
   const newRepetitionCount = repetition_count + 1;
 
   // Calculate new interval
   let newInterval: number;
-  
+
   if (newRepetitionCount === 1) {
     newInterval = 1; // First review: 1 day
   } else if (newRepetitionCount === 2) {
@@ -73,7 +70,7 @@ export function calculateNextReview(params: SpacedRepetitionParams): SpacedRepet
 /**
  * Get initial parameters for a new flashcard
  */
-export function getInitialSpacedRepetitionParams(): Omit<SpacedRepetitionParams, 'quality'> {
+export function getInitialSpacedRepetitionParams(): Omit<SpacedRepetitionParams, "quality"> {
   return {
     repetition_count: 0,
     ease_factor: 2.5, // Default ease factor
@@ -85,10 +82,8 @@ export function getInitialSpacedRepetitionParams(): Omit<SpacedRepetitionParams,
  * Determine if a flashcard is due for review
  */
 export function isFlashcardDue(nextReviewDate: string | Date): boolean {
-  const reviewDate = typeof nextReviewDate === 'string' 
-    ? new Date(nextReviewDate) 
-    : nextReviewDate;
-  
+  const reviewDate = typeof nextReviewDate === "string" ? new Date(nextReviewDate) : nextReviewDate;
+
   return reviewDate <= new Date();
 }
 
@@ -97,10 +92,10 @@ export function isFlashcardDue(nextReviewDate: string | Date): boolean {
  */
 export function getCardsForReview<T extends { repetitions: number; next_review_date: string }>(
   cards: T[],
-  maxCards: number = 20
+  maxCards = 20
 ): T[] {
   return cards
-    .filter(card => card.repetitions > 0 && isFlashcardDue(card.next_review_date))
+    .filter((card) => card.repetitions > 0 && isFlashcardDue(card.next_review_date))
     .sort((a, b) => new Date(a.next_review_date).getTime() - new Date(b.next_review_date).getTime())
     .slice(0, maxCards);
 }
@@ -110,10 +105,10 @@ export function getCardsForReview<T extends { repetitions: number; next_review_d
  */
 export function getNewCardsForLearning<T extends { repetitions: number; next_review_date: string }>(
   cards: T[],
-  maxCards: number = 10
+  maxCards = 10
 ): T[] {
   return cards
-    .filter(card => card.repetitions === 0)
+    .filter((card) => card.repetitions === 0)
     .sort((a, b) => new Date(a.next_review_date).getTime() - new Date(b.next_review_date).getTime())
     .slice(0, maxCards);
 }
@@ -123,8 +118,8 @@ export function getNewCardsForLearning<T extends { repetitions: number; next_rev
  */
 export function getMixedCardsForStudy<T extends { repetitions: number; next_review_date: string }>(
   cards: T[],
-  maxCards: number = 20,
-  newCardRatio: number = 0.3 // 30% new cards, 70% review cards
+  maxCards = 20,
+  newCardRatio = 0.3 // 30% new cards, 70% review cards
 ): T[] {
   const maxNewCards = Math.ceil(maxCards * newCardRatio);
   const maxReviewCards = maxCards - maxNewCards;
@@ -139,15 +134,13 @@ export function getMixedCardsForStudy<T extends { repetitions: number; next_revi
   // If we have remaining slots, try to fill them with any available cards
   let additionalCards: T[] = [];
   if (remainingSlots > 0) {
-    const usedCardIds = new Set([...reviewCards, ...newCards].map(c => (c as any).id));
-    additionalCards = cards
-      .filter(card => !usedCardIds.has((card as any).id))
-      .slice(0, remainingSlots);
+    const usedCardIds = new Set([...reviewCards, ...newCards].map((c) => (c as any).id));
+    additionalCards = cards.filter((card) => !usedCardIds.has((card as any).id)).slice(0, remainingSlots);
   }
 
   // Combine all cards
   const combinedCards = [...reviewCards, ...newCards, ...additionalCards];
-  
+
   // Simple shuffle algorithm
   for (let i = combinedCards.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -163,7 +156,7 @@ export function getMixedCardsForStudy<T extends { repetitions: number; next_revi
  */
 export function getAnyAvailableCards<T extends { repetitions: number; next_review_date: string }>(
   cards: T[],
-  maxCards: number = 20
+  maxCards = 20
 ): T[] {
   // First try new cards
   const newCards = getNewCardsForLearning(cards, maxCards);
@@ -173,9 +166,9 @@ export function getAnyAvailableCards<T extends { repetitions: number; next_revie
 
   // Then try review cards (even if not due yet)
   const allOldCards = cards
-    .filter(card => card.repetitions > 0)
+    .filter((card) => card.repetitions > 0)
     .sort((a, b) => new Date(a.next_review_date).getTime() - new Date(b.next_review_date).getTime())
     .slice(0, maxCards);
 
   return allOldCards;
-} 
+}

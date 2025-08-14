@@ -1,12 +1,15 @@
 # Plan implementacji widoku Recenzji Fiszek AI
 
 ## 1. Przegląd
+
 Ten widok jest drugim i ostatnim krokiem w procesie generowania fiszek AI. Użytkownik widzi tutaj listę fiszek-kandydatów i może zdecydować, które z nich chce zaakceptować. Może również edytować treść każdej fiszki przed ostatecznym zapisem. Kluczowym elementem jest obowiązek wybrania kolekcji, do której trafią zaakceptowane fiszki.
 
 ## 2. Routing widoku
+
 - **Ścieżka**: `/dashboard/ai/review/[generationId]`
 
 ## 3. Struktura komponentów
+
 ```
 - AIReviewPage.astro
   - Layout.astro
@@ -28,7 +31,9 @@ Ten widok jest drugim i ostatnim krokiem w procesie generowania fiszek AI. Użyt
 ```
 
 ## 4. Szczegóły komponentów
+
 ### `AIReviewPage.astro`
+
 - **Opis komponentu**: Strona Astro renderowana serwerowo. Pobiera listę kandydatów fiszek oraz listę dostępnych kolekcji użytkownika.
 - **Główne elementy**: `Layout`, `AIReviewForm`.
 - **Logika `---`**:
@@ -38,6 +43,7 @@ Ten widok jest drugim i ostatnim krokiem w procesie generowania fiszek AI. Użyt
   - Przekazuje obie listy jako propsy do `AIReviewForm`.
 
 ### `AIReviewForm.tsx`
+
 - **Opis komponentu**: Duży, interaktywny formularz React, który zarządza całym procesem recenzji po stronie klienta.
 - **Główne elementy**: `<form>`, `Select`, `Button`, lista komponentów `FlashcardCandidateCard`.
 - **Obsługiwane interakcje**:
@@ -48,11 +54,13 @@ Ten widok jest drugim i ostatnim krokiem w procesie generowania fiszek AI. Użyt
 - **Propsy**: `candidates: FlashcardCandidate[]`, `collections: CollectionDTO[]`.
 
 ### `FlashcardCandidateCard.tsx`
+
 - **Opis komponentu**: Reprezentuje pojedynczą fiszkę-kandydata na liście.
 - **Główne elementy**: `Card`, `Checkbox`, `Input`, `Textarea`.
 - **Propsy**: `candidate: FlashcardCandidate`, `index: number`, `onUpdate: (index, field, value) => void`, `onToggle: (index) => void`.
 
 ## 5. Typy
+
 - **DTO**: `FlashcardCandidate`, `CollectionDTO`, `AcceptFlashcardsRequest`.
 - **ViewModel**: `ReviewedFlashcardViewModel`. Komponent `AIReviewForm.tsx` będzie zarządzał tablicą takich obiektów w swoim stanie.
   ```typescript
@@ -66,6 +74,7 @@ Ten widok jest drugim i ostatnim krokiem w procesie generowania fiszek AI. Użyt
   ```
 
 ## 6. Zarządzanie stanem
+
 - Stan jest w pełni zarządzany po stronie klienta wewnątrz komponentu `AIReviewForm.tsx`.
 - Wymagany stan (`useState`):
   - `reviewedFlashcards: ReviewedFlashcardViewModel[]` - główna lista fiszek, którą użytkownik modyfikuje.
@@ -73,6 +82,7 @@ Ten widok jest drugim i ostatnim krokiem w procesie generowania fiszek AI. Użyt
   - `errors: { collection?: string }` - błędy walidacji.
 
 ## 7. Integracja API
+
 - **Pobieranie danych (GET)**: W `---` strony `.astro` pobierane są dane kandydatów i kolekcji.
 - **Wysyłanie danych (POST)**:
   - W `AIReviewForm.tsx`, po wysłaniu formularza, następuje transformacja stanu `ReviewedFlashcardViewModel[]` na ciało żądania.
@@ -81,6 +91,7 @@ Ten widok jest drugim i ostatnim krokiem w procesie generowania fiszek AI. Użyt
   - **Typ odpowiedzi**: `AcceptFlashcardsResponse`.
 
 ## 8. Interakcje użytkownika
+
 - **Recenzja**: Użytkownik przegląda listę, zaznacza checkboxami fiszki, które chce zapisać, i edytuje ich treść w razie potrzeby.
 - **Wybór kolekcji**: Użytkownik musi wybrać kolekcję z listy `Select`.
 - **Zapis**: Użytkownik klika "Zapisz zaakceptowane".
@@ -88,15 +99,18 @@ Ten widok jest drugim i ostatnim krokiem w procesie generowania fiszek AI. Użyt
   - **Błąd**: Wyświetlany jest komunikat błędu (np. jeśli nie wybrano kolekcji).
 
 ## 9. Warunki i walidacja
+
 - **Warunek**: Przycisk "Zapisz zaakceptowane" powinien być nieaktywny (`disabled`), dopóki użytkownik nie wybierze kolekcji i nie zaakceptuje co najmniej jednej fiszki.
 - **Walidacja**: Przed wysłaniem formularza należy sprawdzić, czy `selectedCollection` nie jest `null`. Jeśli jest, należy wyświetlić błąd przy selektorze.
 
 ## 10. Obsługa błędów
+
 - **Błąd pobierania danych (SSR)**: Jeśli na stronie `.astro` nie uda się pobrać kandydatów lub kolekcji, należy wyświetlić stronę błędu.
 - **Błąd walidacji (CSR)**: Wyświetlenie komunikatu o błędzie przy selektorze kolekcji.
 - **Błąd API (CSR)**: Jeśli `fetch` do endpointu akceptacji zwróci błąd, należy wyświetlić ogólny `Alert` z informacją o niepowodzeniu zapisu.
 
 ## 11. Kroki implementacji
+
 1. Stworzyć plik `src/pages/dashboard/ai/review/[generationId].astro`.
 2. W `---` zaimplementować pobieranie danych kandydatów i listy kolekcji.
 3. Stworzyć komponent-wyspę `src/components/ai/AIReviewForm.tsx` oraz jego komponent-dziecko `FlashcardCandidateCard.tsx`.
@@ -106,4 +120,4 @@ Ten widok jest drugim i ostatnim krokiem w procesie generowania fiszek AI. Użyt
 7. Dodać obsługę przekierowania po udanej operacji.
 8. Zaimplementować logikę `disabled` dla przycisku zapisu.
 9. Dodać obsługę błędów walidacji i błędów API.
-10. Użyć `Layout` i dodać link powrotny do `/dashboard`. 
+10. Użyć `Layout` i dodać link powrotny do `/dashboard`.

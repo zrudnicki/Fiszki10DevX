@@ -16,7 +16,8 @@ export const FlashcardList: React.FC = () => {
       try {
         const { data, error } = await supabase
           .from("flashcards")
-          .select(`
+          .select(
+            `
             *,
             collections (
               name
@@ -24,7 +25,8 @@ export const FlashcardList: React.FC = () => {
             categories (
               name
             )
-          `)
+          `
+          )
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
 
@@ -45,14 +47,11 @@ export const FlashcardList: React.FC = () => {
     if (!confirm("Are you sure you want to delete this flashcard?")) return;
 
     try {
-      const { error } = await supabase
-        .from("flashcards")
-        .delete()
-        .eq("id", id);
+      const { error } = await supabase.from("flashcards").delete().eq("id", id);
 
       if (error) throw error;
 
-      setFlashcards(flashcards.filter(flashcard => flashcard.id !== id));
+      setFlashcards(flashcards.filter((flashcard) => flashcard.id !== id));
     } catch (err) {
       setError("Failed to delete flashcard");
       console.error(err);
@@ -109,19 +108,12 @@ export const FlashcardList: React.FC = () => {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {flashcards.map((flashcard) => (
-              <div
-                key={flashcard.id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden"
-              >
+              <div key={flashcard.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900">
-                        {flashcard.front}
-                      </h3>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {flashcard.back}
-                      </p>
+                      <h3 className="text-lg font-medium text-gray-900">{flashcard.front}</h3>
+                      <p className="mt-1 text-sm text-gray-500">{flashcard.back}</p>
                     </div>
                     <div className="flex space-x-2">
                       <a
@@ -130,21 +122,14 @@ export const FlashcardList: React.FC = () => {
                       >
                         Edit
                       </a>
-                      <button
-                        onClick={() => handleDelete(flashcard.id)}
-                        className="text-red-600 hover:text-red-900"
-                      >
+                      <button onClick={() => handleDelete(flashcard.id)} className="text-red-600 hover:text-red-900">
                         Delete
                       </button>
                     </div>
                   </div>
                   <div className="mt-4 flex items-center text-sm text-gray-500">
-                    <span className="mr-4">
-                      Collection: {flashcard.collections?.name || "None"}
-                    </span>
-                    <span>
-                      Category: {flashcard.categories?.name || "None"}
-                    </span>
+                    <span className="mr-4">Collection: {flashcard.collections?.name || "None"}</span>
+                    <span>Category: {flashcard.categories?.name || "None"}</span>
                   </div>
                 </div>
               </div>
@@ -154,4 +139,4 @@ export const FlashcardList: React.FC = () => {
       </div>
     </div>
   );
-}; 
+};

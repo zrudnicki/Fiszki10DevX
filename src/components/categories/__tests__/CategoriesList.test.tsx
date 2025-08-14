@@ -57,6 +57,3 @@ describe("CategoriesList (SC-CAT-02)", () => {
     expect(getCategoriesMock).toHaveBeenCalledWith("user-1", expect.any(Object));
   });
 });
-
-
-

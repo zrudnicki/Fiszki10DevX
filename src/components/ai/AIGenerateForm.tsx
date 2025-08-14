@@ -5,7 +5,6 @@ import { supabase } from "@/db/supabase";
 import { useAuth } from "../hooks/useAuth";
 import { z } from "zod";
 import type { CollectionDTO } from "@/types/dto.types";
-import type { FlashcardCandidate } from "@/types/dto.types";
 
 const textSchema = z
   .string()

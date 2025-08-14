@@ -49,4 +49,4 @@ export const FlashcardCandidateCard: React.FC<FlashcardCandidateCardProps> = ({
       </div>
     </div>
   );
-}; 
+};

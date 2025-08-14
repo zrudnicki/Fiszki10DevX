@@ -57,4 +57,4 @@ export type GenerateFlashcardsRequest = z.infer<typeof generateFlashcardsSchema>
 export type AcceptFlashcardsRequest = z.infer<typeof acceptFlashcardsSchema>;
 export type FlashcardCandidate = z.infer<typeof flashcardCandidateSchema>;
 export type FlashcardCandidateResponse = z.infer<typeof flashcardCandidateResponseSchema>;
-export type GenerateFlashcardsResponse = z.infer<typeof generateFlashcardsResponseSchema>; 
+export type GenerateFlashcardsResponse = z.infer<typeof generateFlashcardsResponseSchema>;

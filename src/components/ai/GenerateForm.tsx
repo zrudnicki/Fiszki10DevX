@@ -4,7 +4,7 @@ import { GenerateService } from "@/lib/services/generate.service";
 import { CollectionsService } from "@/lib/services/collections.service";
 import { CategoriesService } from "@/lib/services/categories.service";
 import { supabase } from "@/db/supabase";
-import type { GenerateFlashcardsRequest, CollectionDTO, CategoryDTO } from "@/types/dto.types";
+import type { CollectionDTO, CategoryDTO } from "@/types/dto.types";
 
 export const GenerateForm: React.FC = () => {
   const { user } = useAuth();
@@ -204,4 +204,4 @@ export const GenerateForm: React.FC = () => {
       </button>
     </form>
   );
-}; 
+};

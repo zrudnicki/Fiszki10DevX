@@ -65,5 +65,3 @@ describe("CategoryEdit (SC-CAT-03)", () => {
     Object.defineProperty(window, "location", { configurable: true, value: originalLocation });
   });
 });
-
-

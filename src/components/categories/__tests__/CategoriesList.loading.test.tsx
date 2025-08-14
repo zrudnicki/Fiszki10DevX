@@ -21,5 +21,3 @@ describe("CategoriesList - loading", () => {
     expect(container.querySelector(".animate-spin")).not.toBeNull();
   });
 });
-
-

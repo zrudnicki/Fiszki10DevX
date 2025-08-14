@@ -46,4 +46,4 @@ export type StartStudySessionRequest = z.infer<typeof startStudySessionSchema>;
 export type ReviewFlashcardRequest = z.infer<typeof reviewFlashcardSchema>;
 export type BatchReviewRequest = z.infer<typeof batchReviewSchema>;
 export type CompleteSessionRequest = z.infer<typeof completeSessionSchema>;
-export type StudySessionQuery = z.infer<typeof studySessionQuerySchema>; 
+export type StudySessionQuery = z.infer<typeof studySessionQuerySchema>;

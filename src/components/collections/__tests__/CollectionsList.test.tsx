@@ -47,5 +47,3 @@ describe("CollectionsList - happy path", () => {
     expect(getCollectionsMock).toHaveBeenCalledWith("user-1", expect.any(Object));
   });
 });
-
-

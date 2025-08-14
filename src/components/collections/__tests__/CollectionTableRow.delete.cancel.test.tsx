@@ -49,5 +49,3 @@ describe("CollectionTableRow delete - cancel", () => {
     expect(onDelete).not.toHaveBeenCalled();
   });
 });
-
-

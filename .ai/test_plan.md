@@ -11,6 +11,7 @@ Niniejszy dokument przedstawia kompleksowy plan testów dla aplikacji internetow
 **1.2. Cele Testowania**
 
 Główne cele procesu testowego to:
+
 - **Weryfikacja Funkcjonalności:** Potwierdzenie, że wszystkie funkcje aplikacji, w tym uwierzytelnianie, zarządzanie kolekcjami, kategoriami i fiszkami (CRUD), działają zgodnie ze specyfikacją.
 - **Zapewnienie Niezawodności Procesu AI:** Upewnienie się, że przepływ generowania fiszek przez AI – od przesłania tekstu, przez recenzję, aż po zapis – jest stabilny, wydajny i odporny na błędy.
 - **Walidacja Bezpieczeństwa:** Sprawdzenie, czy dane użytkowników są odpowiednio izolowane i chronione, a dostęp do zasobów jest możliwy tylko dla autoryzowanych osób.
@@ -22,6 +23,7 @@ Główne cele procesu testowego to:
 ### **2. Zakres Testów**
 
 **2.1. Funkcjonalności objęte testami:**
+
 - System uwierzytelniania użytkowników (rejestracja, logowanie, wylogowywanie, sesje).
 - Pełen cykl życia (CRUD) dla kolekcji fiszek.
 - Pełen cykl życia (CRUD) dla kategorii.
@@ -32,6 +34,7 @@ Główne cele procesu testowego to:
 - Podstawowa responsywność interfejsu użytkownika (desktop, mobile).
 
 **2.2. Funkcjonalności wyłączone z testów:**
+
 - Zaawansowane testy obciążeniowe i wydajnościowe symulujące tysiące jednoczesnych użytkowników.
 - Szczegółowe testy kompatybilności ze starszymi lub niszowymi przeglądarkami internetowymi.
 - Testy jakości samego modelu językowego AI (zakładamy, że zewnętrzna usługa działa poprawnie).
@@ -51,27 +54,27 @@ Główne cele procesu testowego to:
 
 ### **4. Scenariusze Testowe dla Kluczowych Funkcjonalności**
 
-| ID Scenariusza | Funkcjonalność | Opis Scenariusza | Priorytet |
-| :--- | :--- | :--- | :--- |
-| **Uwierzytelnianie** |
-| SC-AUTH-01 | Logowanie i Dostęp | Użytkownik loguje się, uzyskuje dostęp do panelu głównego, a po wylogowaniu traci dostęp do chronionych zasobów. | **Krytyczny** |
-| SC-AUTH-02 | Izolacja Danych | Użytkownik A po zalogowaniu nie ma dostępu do danych (kolekcji, fiszek) użytkownika B. | **Krytyczny** |
-| **Zarządzanie Kolekcjami** |
-| SC-COLL-01 | Tworzenie kolekcji | Użytkownik pomyślnie tworzy nową kolekcję, podając jej nazwę i opcjonalny opis. | **Wysoki** |
-| SC-COLL-02 | Odczyt kolekcji | Użytkownik poprawnie wyświetla listę wszystkich swoich kolekcji wraz z liczbą fiszek. | **Wysoki** |
-| SC-COLL-03 | Aktualizacja kolekcji | Użytkownik modyfikuje nazwę i opis istniejącej kolekcji. | **Średni** |
-| SC-COLL-04 | Usuwanie kolekcji | Użytkownik usuwa wybraną kolekcję po potwierdzeniu operacji. | **Średni** |
+| ID Scenariusza              | Funkcjonalność                  | Opis Scenariusza                                                                                                                                                                            | Priorytet     |
+| :-------------------------- | :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------ |
+| **Uwierzytelnianie**        |
+| SC-AUTH-01                  | Logowanie i Dostęp              | Użytkownik loguje się, uzyskuje dostęp do panelu głównego, a po wylogowaniu traci dostęp do chronionych zasobów.                                                                            | **Krytyczny** |
+| SC-AUTH-02                  | Izolacja Danych                 | Użytkownik A po zalogowaniu nie ma dostępu do danych (kolekcji, fiszek) użytkownika B.                                                                                                      | **Krytyczny** |
+| **Zarządzanie Kolekcjami**  |
+| SC-COLL-01                  | Tworzenie kolekcji              | Użytkownik pomyślnie tworzy nową kolekcję, podając jej nazwę i opcjonalny opis.                                                                                                             | **Wysoki**    |
+| SC-COLL-02                  | Odczyt kolekcji                 | Użytkownik poprawnie wyświetla listę wszystkich swoich kolekcji wraz z liczbą fiszek.                                                                                                       | **Wysoki**    |
+| SC-COLL-03                  | Aktualizacja kolekcji           | Użytkownik modyfikuje nazwę i opis istniejącej kolekcji.                                                                                                                                    | **Średni**    |
+| SC-COLL-04                  | Usuwanie kolekcji               | Użytkownik usuwa wybraną kolekcję po potwierdzeniu operacji.                                                                                                                                | **Średni**    |
 | **Zarządzanie Kategoriami** |
-| SC-CAT-01 | Tworzenie kategorii | Użytkownik pomyślnie tworzy nową kategorię, podając jej nazwę. | **Wysoki** |
-| SC-CAT-02 | Odczyt kategorii | Użytkownik poprawnie wyświetla listę wszystkich swoich kategorii. | **Wysoki** |
-| SC-CAT-03 | Aktualizacja kategorii | Użytkownik modyfikuje nazwę istniejącej kategorii. | **Średni** |
-| SC-CAT-04 | Usuwanie kategorii | Użytkownik usuwa wybraną kategorię po potwierdzeniu operacji. | **Średni** |
-| **Generowanie Fiszek AI** |
-| SC-AI-01 | Pełen Cykl Generowania | Użytkownik loguje się, tworzy kolekcję, przechodzi do formularza generowania, wkleja poprawny tekst, generuje fiszki, recenzuje je, akceptuje i widzi je w swojej kolekcji. | **Krytyczny** |
-| SC-AI-02 | Obsługa Nieprawidłowych Danych | Użytkownik próbuje wygenerować fiszki z tekstu, który jest zbyt krótki lub zbyt długi. Aplikacja wyświetla stosowny komunikat błędu i blokuje wysłanie żądania. | **Wysoki** |
-| SC-AI-03 | Błąd Usługi Zewnętrznej | Podczas generowania fiszek występuje błąd po stronie API (np. OpenRouter jest niedostępny). Interfejs użytkownika informuje o problemie w czytelny sposób, nie blokując aplikacji. | **Wysoki** |
-| **Sesja Nauki** |
-| SC-STUDY-01 | Rozpoczęcie i Zakończenie Sesji | Użytkownik wybiera kolekcję z fiszkami i rozpoczyna sesję nauki. Odpowiada na kilka pytań, a następnie kończy sesję. System poprawnie aktualizuje parametry powtórek dla ocenionych fiszek. | **Wysoki** |
+| SC-CAT-01                   | Tworzenie kategorii             | Użytkownik pomyślnie tworzy nową kategorię, podając jej nazwę.                                                                                                                              | **Wysoki**    |
+| SC-CAT-02                   | Odczyt kategorii                | Użytkownik poprawnie wyświetla listę wszystkich swoich kategorii.                                                                                                                           | **Wysoki**    |
+| SC-CAT-03                   | Aktualizacja kategorii          | Użytkownik modyfikuje nazwę istniejącej kategorii.                                                                                                                                          | **Średni**    |
+| SC-CAT-04                   | Usuwanie kategorii              | Użytkownik usuwa wybraną kategorię po potwierdzeniu operacji.                                                                                                                               | **Średni**    |
+| **Generowanie Fiszek AI**   |
+| SC-AI-01                    | Pełen Cykl Generowania          | Użytkownik loguje się, tworzy kolekcję, przechodzi do formularza generowania, wkleja poprawny tekst, generuje fiszki, recenzuje je, akceptuje i widzi je w swojej kolekcji.                 | **Krytyczny** |
+| SC-AI-02                    | Obsługa Nieprawidłowych Danych  | Użytkownik próbuje wygenerować fiszki z tekstu, który jest zbyt krótki lub zbyt długi. Aplikacja wyświetla stosowny komunikat błędu i blokuje wysłanie żądania.                             | **Wysoki**    |
+| SC-AI-03                    | Błąd Usługi Zewnętrznej         | Podczas generowania fiszek występuje błąd po stronie API (np. OpenRouter jest niedostępny). Interfejs użytkownika informuje o problemie w czytelny sposób, nie blokując aplikacji.          | **Wysoki**    |
+| **Sesja Nauki**             |
+| SC-STUDY-01                 | Rozpoczęcie i Zakończenie Sesji | Użytkownik wybiera kolekcję z fiszkami i rozpoczyna sesję nauki. Odpowiada na kilka pytań, a następnie kończy sesję. System poprawnie aktualizuje parametry powtórek dla ocenionych fiszek. | **Wysoki**    |
 
 ---
 

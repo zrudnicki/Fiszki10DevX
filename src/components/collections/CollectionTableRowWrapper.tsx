@@ -9,4 +9,4 @@ interface CollectionTableRowWrapperProps {
 
 export const CollectionTableRowWrapper: React.FC<CollectionTableRowWrapperProps> = (props) => {
   return <CollectionTableRow {...props} />;
-}; 
+};

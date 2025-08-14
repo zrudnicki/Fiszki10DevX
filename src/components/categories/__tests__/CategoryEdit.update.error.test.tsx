@@ -54,5 +54,3 @@ describe("CategoryEdit - update error", () => {
     Object.defineProperty(window, "location", { configurable: true, value: originalLocation });
   });
 });
-
-

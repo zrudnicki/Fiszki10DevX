@@ -57,6 +57,7 @@
 ### Główne wymagania schematu bazy danych
 
 Aplikacja 10xDevFiszki wymaga bazy danych PostgreSQL wspierającej:
+
 - Zarządzanie fiszkami z AI generowaniem i ręcznym tworzeniem
 - System powtórek oparty na algorytmie SM-2
 - Śledzenie statystyk dla metryk sukcesu (75% akceptacji AI, czas przeglądu <2min)
@@ -65,19 +66,23 @@ Aplikacja 10xDevFiszki wymaga bazy danych PostgreSQL wspierającej:
 ### Kluczowe encje i relacje
 
 **Users** (zarządzane przez Supabase Auth)
+
 - Basis dla RLS policies
 
 **Collections**
+
 - user_id (FK), name (max 250 chars), timestamps
 - Unique constraint: (user_id, name)
 - CASCADE DELETE do flashcards
 
-**Categories** 
+**Categories**
+
 - user_id (FK), name (max 250 chars), timestamps
 - Unique constraint: (user_id, name)
 - Płaska struktura bez hierarchii
 
 **Flashcards**
+
 - user_id (FK), collection_id (FK), category_id (FK optional)
 - front (≤200 chars), back (≤500 chars)
 - SM-2 parameters: easiness_factor, interval, repetitions
@@ -85,12 +90,14 @@ Aplikacja 10xDevFiszki wymaga bazy danych PostgreSQL wspierającej:
 - created_by enum (manual, ai_generated)
 
 **Study_Sessions**
+
 - user_id (FK), collection_id (FK)
 - started_at, ended_at (updated per flashcard)
 - flashcards_reviewed_count, status enum
 - Wspiera kontynuację sesji i timeout handling
 
 **Flashcard_Generation_Stats**
+
 - user_id (FK), total_generated, total_accepted_direct, total_accepted_edited
 
 ### Bezpieczeństwo i skalowalność
@@ -114,4 +121,4 @@ Aplikacja 10xDevFiszki wymaga bazy danych PostgreSQL wspierającej:
 3. Szczegóły implementacji function get_cards_for_review() dla algorytmu SM-2
 4. Strategia backup i retention zgodna z RODO - nie została szczegółowo omówiona
 5. Konkretne wartości dla CHECK constraints na easiness_factor algorytmu SM-2
-6. Obsługa edge cases gdy next_review_date jest w przeszłości przy długiej nieaktywności 
+6. Obsługa edge cases gdy next_review_date jest w przeszłości przy długiej nieaktywności
