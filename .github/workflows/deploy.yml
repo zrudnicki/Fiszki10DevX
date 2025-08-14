@@ -3,7 +3,10 @@ name: Build and Deploy Astro App
 on:
   push:
     branches:
-      - master
+      - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -51,6 +54,4 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
-
-
-
+  
