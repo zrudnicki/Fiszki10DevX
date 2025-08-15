@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "../../db/supabase";
 import type { Database } from "../../db/database.types";
-import type { GenerateFlashcardsRequest, GenerateFlashcardsResponse, FlashcardCandidate } from "../../types/dto.types";
+import type { GenerateFlashcardsRequest, FlashcardCandidate } from "../../types/dto.types";
 
 export class GenerateService {
   constructor(private supabase: SupabaseClient<Database>) {}

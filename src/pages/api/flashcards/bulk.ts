@@ -35,7 +35,7 @@ export const ALL: APIRoute = withErrorHandling(async (context) => {
 /**
  * Handle POST /api/flashcards/bulk
  */
-async function handleBulkCreateFlashcards(context: any, service: FlashcardsService, userId: string) {
+async function handleBulkCreateFlashcards(context: { request: Request }, service: FlashcardsService, userId: string) {
   const { request } = context;
 
   // Parse and validate request body

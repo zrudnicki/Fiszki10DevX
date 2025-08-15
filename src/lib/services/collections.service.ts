@@ -8,7 +8,6 @@ import type {
   PaginationParams,
 } from "../../types/dto.types";
 
-type DatabaseCollection = Database["public"]["Tables"]["collections"]["Row"];
 type DatabaseCollectionInsert = Database["public"]["Tables"]["collections"]["Insert"];
 type DatabaseCollectionUpdate = Database["public"]["Tables"]["collections"]["Update"];
 

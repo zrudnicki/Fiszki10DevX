@@ -17,10 +17,15 @@ export const FlashcardCandidateCard: React.FC<FlashcardCandidateCardProps> = ({
   onUpdate,
   onToggle,
 }) => {
+  const checkboxId = `candidate-${index}-accepted`;
+  const frontId = `candidate-${index}-front`;
+  const backId = `candidate-${index}-back`;
+
   return (
     <div className="bg-white/5 rounded-lg p-6 shadow-md">
       <div className="flex items-start gap-4">
         <input
+          id={checkboxId}
           type="checkbox"
           checked={accepted}
           onChange={() => onToggle(index)}
@@ -28,8 +33,11 @@ export const FlashcardCandidateCard: React.FC<FlashcardCandidateCardProps> = ({
         />
         <div className="flex-1 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Front</label>
+            <label htmlFor={frontId} className="block text-sm font-medium text-gray-300 mb-2">
+              Front
+            </label>
             <input
+              id={frontId}
               type="text"
               value={front}
               onChange={(e) => onUpdate(index, "front", e.target.value)}
@@ -37,8 +45,11 @@ export const FlashcardCandidateCard: React.FC<FlashcardCandidateCardProps> = ({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Back</label>
+            <label htmlFor={backId} className="block text-sm font-medium text-gray-300 mb-2">
+              Back
+            </label>
             <textarea
+              id={backId}
               value={back}
               onChange={(e) => onUpdate(index, "back", e.target.value)}
               rows={3}

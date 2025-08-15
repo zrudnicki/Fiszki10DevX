@@ -404,6 +404,9 @@ const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         `;
         }
 
+        // Initial state
+        showLoading();
+
         // Show login required screen
         function showLoginRequired() {
           document.getElementById("app").innerHTML = `

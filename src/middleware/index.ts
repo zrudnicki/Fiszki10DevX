@@ -24,7 +24,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   // Handle page auth redirects
   const isAuthPage = context.url.pathname === "/login";
-  const isCallbackPage = context.url.pathname === "/auth/callback";
 
   if (session && isAuthPage) {
     return context.redirect("/");

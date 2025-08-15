@@ -21,7 +21,7 @@ vi.spyOn(window, "confirm").mockImplementation(() => true);
 describe("CategoryTableRow delete (SC-CAT-04)", () => {
   beforeEach(() => {
     deleteCategoryMock.mockReset();
-    (window.confirm as unknown as jest.Mock | (() => boolean)).mockReturnValue?.(true);
+    vi.spyOn(window, "confirm").mockReturnValue(true);
   });
 
   it("calls service and onDelete on confirm", async () => {
@@ -48,7 +48,7 @@ describe("CategoryTableRow delete (SC-CAT-04)", () => {
     const row = screen.getByRole("row");
     await user.click(within(row).getByRole("button", { name: "Usuń" }));
 
-    expect(deleteCategoryMock).toHaveBeenCalledWith("c1");
+    expect(deleteCategoryMock).toHaveBeenCalledWith("user-1", "c1");
     expect(onDelete).toHaveBeenCalledWith("c1");
   });
 });

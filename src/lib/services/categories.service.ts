@@ -3,14 +3,10 @@ import type { Database } from "../../db/supabase";
 import type {
   CategoryDTO,
   CategoriesListResponse,
-  CreateCategoryRequest,
   UpdateCategoryRequest,
   PaginationParams,
 } from "../../types/dto.types";
 
-// Database types
-type DatabaseCategory = Database["public"]["Tables"]["categories"]["Row"];
-type DatabaseCategoryInsert = Database["public"]["Tables"]["categories"]["Insert"];
 type DatabaseCategoryUpdate = Database["public"]["Tables"]["categories"]["Update"];
 
 interface CreateCategoryDTO {

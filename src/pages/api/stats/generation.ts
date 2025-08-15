@@ -53,7 +53,7 @@ async function handleGetGenerationStats(service: StatisticsService) {
 /**
  * Handle PUT /api/stats/generation
  */
-async function handleUpdateGenerationStats(context: any, service: StatisticsService) {
+async function handleUpdateGenerationStats(context: { request: Request }, service: StatisticsService) {
   const { request } = context;
 
   // Parse and validate request body

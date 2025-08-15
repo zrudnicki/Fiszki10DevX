@@ -69,7 +69,12 @@ async function handleGetCollection(service: CollectionsService, userId: string, 
 /**
  * Handle PUT /api/collections/{id}
  */
-async function handleUpdateCollection(context: any, service: CollectionsService, userId: string, collectionId: string) {
+async function handleUpdateCollection(
+  context: { request: Request },
+  service: CollectionsService,
+  userId: string,
+  collectionId: string
+) {
   const { request } = context;
 
   // Parse and validate request body

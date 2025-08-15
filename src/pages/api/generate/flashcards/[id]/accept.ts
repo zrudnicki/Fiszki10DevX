@@ -42,7 +42,7 @@ export const ALL: APIRoute = withErrorHandling(async (context) => {
  * Handle POST /api/generate/flashcards/{id}/accept
  */
 async function handleAcceptFlashcards(
-  context: any,
+  context: { request: Request },
   service: AIGenerationService,
   userId: string,
   generationId: string
@@ -57,25 +57,26 @@ async function handleAcceptFlashcards(
     const result = await service.acceptFlashcards(userId, generationId, requestData);
 
     return createJSONResponse(result, 201);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as Error;
     // Handle session-related errors
     if (
-      error.message.includes("Generation session not found") ||
-      error.message.includes("Generation session has expired")
+      err.message.includes("Generation session not found") ||
+      err.message.includes("Generation session has expired")
     ) {
-      throw new APIResponseError(404, "Not Found", error.message);
+      throw new APIResponseError(404, "Not Found", err.message);
     }
 
-    if (error.message.includes("Generation session does not belong to user")) {
-      throw new APIResponseError(403, "Forbidden", error.message);
+    if (err.message.includes("Generation session does not belong to user")) {
+      throw new APIResponseError(403, "Forbidden", err.message);
     }
 
     // Handle validation errors
-    if (error.message.includes("not found or does not belong to user")) {
-      throw new APIResponseError(404, "Not Found", error.message);
+    if (err.message.includes("not found or does not belong to user")) {
+      throw new APIResponseError(404, "Not Found", err.message);
     }
 
     // Re-throw other errors to be handled by global error handler
-    throw error;
+    throw err;
   }
 }

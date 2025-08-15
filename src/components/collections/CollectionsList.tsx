@@ -6,7 +6,7 @@ import { supabase } from "@/db/supabase";
 import { useAuth } from "../hooks/useAuth";
 
 export const CollectionsList: React.FC = () => {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [collections, setCollections] = useState<CollectionDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

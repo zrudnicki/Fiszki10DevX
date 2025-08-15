@@ -169,7 +169,7 @@ export class AIGenerationService {
       // Check rate limit
       const rateCheck = this.checkRateLimit(userId);
       if (!rateCheck.allowed) {
-        const resetDate = new Date(rateCheck.resetTime!);
+        const resetDate = new Date(rateCheck.resetTime ?? Date.now());
         throw new Error(`Rate limit exceeded. Try again after ${resetDate.toISOString()}`);
       }
 

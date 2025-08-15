@@ -47,7 +47,7 @@ export const ALL: APIRoute = withErrorHandling(async (context) => {
 /**
  * Handle GET /api/flashcards
  */
-async function handleGetFlashcards(context: any, service: FlashcardsService, userId: string) {
+async function handleGetFlashcards(context: { request: Request }, service: FlashcardsService, userId: string) {
   const url = new URL(context.request.url);
 
   // Parse and validate query parameters
@@ -63,7 +63,7 @@ async function handleGetFlashcards(context: any, service: FlashcardsService, use
 /**
  * Handle POST /api/flashcards
  */
-async function handleCreateFlashcard(context: any, service: FlashcardsService, userId: string) {
+async function handleCreateFlashcard(context: { request: Request }, service: FlashcardsService, userId: string) {
   const { request } = context;
 
   // Parse and validate request body

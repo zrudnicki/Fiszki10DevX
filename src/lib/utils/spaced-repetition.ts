@@ -116,7 +116,7 @@ export function getNewCardsForLearning<T extends { repetitions: number; next_rev
 /**
  * Mix review and new cards for a balanced study session
  */
-export function getMixedCardsForStudy<T extends { repetitions: number; next_review_date: string }>(
+export function getMixedCardsForStudy<T extends { id: string; repetitions: number; next_review_date: string }>(
   cards: T[],
   maxCards = 20,
   newCardRatio = 0.3 // 30% new cards, 70% review cards
@@ -134,8 +134,8 @@ export function getMixedCardsForStudy<T extends { repetitions: number; next_revi
   // If we have remaining slots, try to fill them with any available cards
   let additionalCards: T[] = [];
   if (remainingSlots > 0) {
-    const usedCardIds = new Set([...reviewCards, ...newCards].map((c) => (c as any).id));
-    additionalCards = cards.filter((card) => !usedCardIds.has((card as any).id)).slice(0, remainingSlots);
+    const usedCardIds = new Set([...reviewCards, ...newCards].map((c) => c.id));
+    additionalCards = cards.filter((card) => !usedCardIds.has(card.id)).slice(0, remainingSlots);
   }
 
   // Combine all cards

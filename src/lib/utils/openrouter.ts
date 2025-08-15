@@ -114,8 +114,8 @@ Nie dodawaj żadnego tekstu przed lub po tablicy JSON. Zwróć tylko JSON.`;
       // Parse the JSON response
       let flashcards: FlashcardCandidate[];
       try {
-        flashcards = JSON.parse(content);
-      } catch (parseError) {
+        flashcards = JSON.parse(content) as FlashcardCandidate[];
+      } catch {
         console.error("Failed to parse OpenRouter response as JSON:", content);
         throw new Error("AI response was not valid JSON format");
       }
@@ -126,7 +126,7 @@ Nie dodawaj żadnego tekstu przed lub po tablicy JSON. Zwróć tylko JSON.`;
       }
 
       // Validate each flashcard
-      const validFlashcards = flashcards.filter((card: any) => {
+      const validFlashcards = flashcards.filter((card: FlashcardCandidate) => {
         return (
           typeof card === "object" &&
           typeof card.front === "string" &&
