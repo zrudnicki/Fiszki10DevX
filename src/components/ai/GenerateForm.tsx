@@ -49,7 +49,7 @@ export const GenerateForm: React.FC = () => {
 
       try {
         const categoriesService = new CategoriesService(supabase);
-        const response = await categoriesService.getCategories(user.id, selectedCollectionId, {
+        const response = await categoriesService.getCategories(user.id, {
           limit: 50,
           offset: 0,
           sort: "created_at",

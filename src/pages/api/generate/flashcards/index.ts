@@ -36,7 +36,7 @@ export const ALL: APIRoute = withErrorHandling(async (context) => {
 /**
  * Handle POST /api/generate/flashcards
  */
-async function handleGenerateFlashcards(context: any, service: AIGenerationService, userId: string) {
+async function handleGenerateFlashcards(context: { request: Request }, service: AIGenerationService, userId: string) {
   const { request } = context;
 
   try {
@@ -47,28 +47,29 @@ async function handleGenerateFlashcards(context: any, service: AIGenerationServi
     const result = await service.generateFlashcards(userId, requestData);
 
     return createJSONResponse(result, 200);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as Error;
     // Handle rate limiting specifically
-    if (error.message.includes("Rate limit exceeded")) {
-      throw new APIResponseError(429, "Too Many Requests", error.message);
+    if (err.message.includes("Rate limit exceeded")) {
+      throw new APIResponseError(429, "Too Many Requests", err.message);
     }
 
     // Handle AI configuration errors
-    if (error.message.includes("AI generation is not configured")) {
-      throw new APIResponseError(503, "Service Unavailable", error.message);
+    if (err.message.includes("AI generation is not configured")) {
+      throw new APIResponseError(503, "Service Unavailable", err.message);
     }
 
     // Handle OpenRouter API errors
-    if (error.message.includes("OpenRouter API error")) {
+    if (err.message.includes("OpenRouter API error")) {
       throw new APIResponseError(502, "Bad Gateway", "AI service is temporarily unavailable");
     }
 
     // Handle validation errors
-    if (error.message.includes("not found or does not belong to user")) {
-      throw new APIResponseError(404, "Not Found", error.message);
+    if (err.message.includes("not found or does not belong to user")) {
+      throw new APIResponseError(404, "Not Found", err.message);
     }
 
     // Re-throw other errors to be handled by global error handler
-    throw error;
+    throw err;
   }
 }

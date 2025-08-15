@@ -15,6 +15,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const gitignorePath = path.resolve(__dirname, ".gitignore");
 
+// Project-specific ignores
+const projectIgnores = {
+  ignores: ["src/db/database.types.ts", "src/pages/test-api.astro"],
+};
+
 const baseConfig = tseslint.config({
   extends: [eslint.configs.recommended, tseslint.configs.strict, tseslint.configs.stylistic],
   rules: {
@@ -57,6 +62,7 @@ const reactConfig = tseslint.config({
 });
 
 export default tseslint.config(
+  projectIgnores,
   includeIgnoreFile(gitignorePath),
   baseConfig,
   jsxA11yConfig,

@@ -11,7 +11,7 @@ interface CategoriesListProps {
 }
 
 export const CategoriesList: React.FC<CategoriesListProps> = ({ initialCategories = [] }) => {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [categories, setCategories] = useState<CategoryDTO[]>(initialCategories);
   const [isLoading, setIsLoading] = useState(true);
 

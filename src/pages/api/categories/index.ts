@@ -47,7 +47,7 @@ export const ALL: APIRoute = withErrorHandling(async (context) => {
 /**
  * Handle GET /api/categories
  */
-async function handleGetCategories(context: any, service: CategoriesService, userId: string) {
+async function handleGetCategories(context: { request: Request }, service: CategoriesService, userId: string) {
   const url = new URL(context.request.url);
 
   // Parse and validate query parameters
@@ -63,7 +63,7 @@ async function handleGetCategories(context: any, service: CategoriesService, use
 /**
  * Handle POST /api/categories
  */
-async function handleCreateCategory(context: any, service: CategoriesService, userId: string) {
+async function handleCreateCategory(context: { request: Request }, service: CategoriesService, userId: string) {
   const { request } = context;
 
   // Parse and validate request body

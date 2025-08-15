@@ -11,8 +11,6 @@ import type {
 } from "../../types/dto.types";
 import { getInitialSpacedRepetitionParams } from "../utils/spaced-repetition";
 
-// Database types
-type DatabaseFlashcard = Database["public"]["Tables"]["flashcards"]["Row"];
 type DatabaseFlashcardInsert = Database["public"]["Tables"]["flashcards"]["Insert"];
 type DatabaseFlashcardUpdate = Database["public"]["Tables"]["flashcards"]["Update"];
 

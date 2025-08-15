@@ -42,7 +42,7 @@ export const ALL: APIRoute = withErrorHandling(async (context) => {
 /**
  * Handle GET /api/stats/learning
  */
-async function handleGetLearningStats(context: any, service: StatisticsService) {
+async function handleGetLearningStats(context: { request: Request }, service: StatisticsService) {
   const url = new URL(context.request.url);
 
   // Parse and validate query parameters

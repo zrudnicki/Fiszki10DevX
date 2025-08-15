@@ -10,7 +10,6 @@ import type {
 } from "../../types/dto.types";
 import {
   calculateNextReview,
-  getInitialSpacedRepetitionParams,
   getCardsForReview,
   getNewCardsForLearning,
   getMixedCardsForStudy,
@@ -18,10 +17,8 @@ import {
   type SpacedRepetitionParams,
 } from "../utils/spaced-repetition";
 
-type DatabaseStudySession = Database["public"]["Tables"]["study_sessions"]["Row"];
 type DatabaseStudySessionInsert = Database["public"]["Tables"]["study_sessions"]["Insert"];
 type DatabaseStudySessionUpdate = Database["public"]["Tables"]["study_sessions"]["Update"];
-type DatabaseFlashcard = Database["public"]["Tables"]["flashcards"]["Row"];
 type DatabaseFlashcardUpdate = Database["public"]["Tables"]["flashcards"]["Update"];
 
 /**

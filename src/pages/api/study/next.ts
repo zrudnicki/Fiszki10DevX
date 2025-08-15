@@ -41,7 +41,7 @@ export const ALL: APIRoute = withErrorHandling(async (context) => {
 /**
  * Handle POST /api/study/next
  */
-async function handleStartStudySession(context: any, service: StudyService) {
+async function handleStartStudySession(context: { request: Request }, service: StudyService) {
   const { request } = context;
 
   // Parse and validate request body

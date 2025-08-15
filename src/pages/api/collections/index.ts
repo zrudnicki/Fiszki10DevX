@@ -47,7 +47,7 @@ export const ALL: APIRoute = withErrorHandling(async (context) => {
 /**
  * Handle GET /api/collections
  */
-async function handleGetCollections(context: any, service: CollectionsService, userId: string) {
+async function handleGetCollections(context: { request: Request }, service: CollectionsService, userId: string) {
   const url = new URL(context.request.url);
 
   // Parse and validate query parameters
@@ -63,7 +63,7 @@ async function handleGetCollections(context: any, service: CollectionsService, u
 /**
  * Handle POST /api/collections
  */
-async function handleCreateCollection(context: any, service: CollectionsService, userId: string) {
+async function handleCreateCollection(context: { request: Request }, service: CollectionsService, userId: string) {
   const { request } = context;
 
   // Parse and validate request body

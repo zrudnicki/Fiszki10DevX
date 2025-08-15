@@ -6,7 +6,6 @@ import {
   getAuthenticatedUser,
   getAuthenticatedSupabaseClient,
   createJSONResponse,
-  parseJSONBody,
   checkHTTPMethod,
   extractIdParam,
 } from "../../../../../lib/utils/api-helpers";
@@ -45,7 +44,7 @@ export const ALL: APIRoute = withErrorHandling(async (context) => {
 /**
  * Handle POST /api/study/sessions/{id}/review
  */
-async function handleReviewFlashcards(context: any, service: StudyService, sessionId: string) {
+async function handleReviewFlashcards(context: { request: Request }, service: StudyService, sessionId: string) {
   const { request } = context;
 
   // Parse request body as JSON first to determine if it's single or batch review
@@ -54,7 +53,7 @@ async function handleReviewFlashcards(context: any, service: StudyService, sessi
 
   try {
     parsedBody = JSON.parse(rawBody);
-  } catch (error) {
+  } catch {
     throw new Error("Invalid JSON in request body");
   }
 

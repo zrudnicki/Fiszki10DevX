@@ -69,7 +69,12 @@ async function handleGetCategory(service: CategoriesService, userId: string, cat
 /**
  * Handle PUT /api/categories/{id}
  */
-async function handleUpdateCategory(context: any, service: CategoriesService, userId: string, categoryId: string) {
+async function handleUpdateCategory(
+  context: { request: Request },
+  service: CategoriesService,
+  userId: string,
+  categoryId: string
+) {
   const { request } = context;
 
   // Parse and validate request body

@@ -69,7 +69,12 @@ async function handleGetFlashcard(service: FlashcardsService, userId: string, fl
 /**
  * Handle PUT /api/flashcards/{id}
  */
-async function handleUpdateFlashcard(context: any, service: FlashcardsService, userId: string, flashcardId: string) {
+async function handleUpdateFlashcard(
+  context: { request: Request },
+  service: FlashcardsService,
+  userId: string,
+  flashcardId: string
+) {
   const { request } = context;
 
   // Parse and validate request body
