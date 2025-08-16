@@ -2,10 +2,9 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-
 import type { CategoryDTO } from "@/types/dto.types";
+import { AuthProviderMock, mockUser } from "./mocks/AuthProviderMock";
 
-// Auth not needed here as row uses only category prop and service
 vi.mock("@/db/supabase", () => ({ supabase: {} }));
 
 const deleteCategoryMock = vi.fn();
@@ -38,17 +37,19 @@ describe("CategoryTableRow delete (SC-CAT-04)", () => {
     const onDelete = vi.fn();
 
     render(
-      <table>
-        <tbody>
-          <CategoryTableRow category={cat} onDelete={onDelete} />
-        </tbody>
-      </table>
+      <AuthProviderMock>
+        <table>
+          <tbody>
+            <CategoryTableRow category={cat} onDelete={onDelete} />
+          </tbody>
+        </table>
+      </AuthProviderMock>
     );
 
     const row = screen.getByRole("row");
     await user.click(within(row).getByRole("button", { name: "Usuń" }));
 
-    expect(deleteCategoryMock).toHaveBeenCalledWith("user-1", "c1");
+    expect(deleteCategoryMock).toHaveBeenCalledWith(mockUser.id, "c1");
     expect(onDelete).toHaveBeenCalledWith("c1");
   });
 });

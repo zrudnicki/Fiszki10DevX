@@ -3,7 +3,6 @@ name: Build and Deploy Astro App
 on:
   push:
     branches:
-      - master
       - main
   workflow_dispatch:
 
@@ -17,7 +16,32 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run unit tests
+        run: npm run test
+        
+      - name: Run E2E tests
+        run: |
+          npx playwright install --with-deps
+          npm run e2e
+
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -39,6 +63,12 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+          SITE_NAME: ${{ secrets.SITE_NAME }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 
       - name: Setup GitHub Pages
         if: ${{ github.ref == 'refs/heads/main' }}
