@@ -100,3 +100,26 @@ npx supabase db push
 - **Flashcard Management**: Add, update, and remove flashcards within collections.
 - **Study Sessions**: Start study sessions based on different modes (learn, review, mixed).
 - **Spaced Repetition**: An algorithm schedules flashcards for review at optimal intervals to improve memory retention.
+
+## CI/CD & Deploy (GitHub Actions + GitHub Pages)
+
+The pipeline lives in `/.github/workflows/deploy.yml` and contains two jobs:
+- build: runs `lint:ci`, `typecheck`, `build`, and uploads the artifact
+- deploy: configures Pages and publishes to GitHub Pages
+
+Repository configuration requirements:
+- Settings → Actions → General → Workflow permissions: set to “Read and write”.
+- Settings → Pages → Source: select “GitHub Actions”.
+- (If Environments are enabled) Settings → Environments → `github-pages`: allow GitHub Actions to deploy or remove required reviewers.
+- Deploy runs only from the `main` branch.
+
+Workflow permissions used:
+- build: `contents: read`
+- deploy: `contents: read`, `pages: write`, `id-token: write`
+
+Common errors and fixes:
+- Resource not accessible by integration: running from a PR/fork (restricted token), missing `pages: write` / `id-token: write`, or protected `github-pages` environment — run from `main` in the base repo and/or allow GitHub Actions in the `github-pages` environment.
+- Get Pages site failed / Not Found: Pages not enabled (set Source to GitHub Actions) or Pages are disabled at the org level — enable Pages in org/repo Settings.
+
+Manual deployment:
+- Push to `main` or trigger the workflow manually (workflow_dispatch) on `main`.
