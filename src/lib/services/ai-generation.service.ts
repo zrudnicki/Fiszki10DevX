@@ -261,7 +261,7 @@ export class AIGenerationService {
 
       // Create flashcards using FlashcardsService
       const result = await this.flashcardsService.createFlashcardsBulk(userId, {
-        flashcards: request.flashcards.map((card) => ({
+        flashcards: request.accepted_cards.map((card) => ({
           front: card.front,
           back: card.back,
           collection_id: request.collection_id,
@@ -271,7 +271,7 @@ export class AIGenerationService {
       });
 
       // Update statistics
-      await this.updateGenerationStats(userId, 0, request.flashcards.length, 0);
+      await this.updateGenerationStats(userId, 0, request.accepted_cards.length, 0);
 
       // Clean up session
       generationSessions.delete(generationId);

@@ -16,17 +16,7 @@ export const FlashcardList: React.FC = () => {
       try {
         const { data, error } = await supabase
           .from("flashcards")
-          .select(
-            `
-            *,
-            collections (
-              name
-            ),
-            categories (
-              name
-            )
-          `
-          )
+          .select(`id, front, back, collection_id, category_id, source, easiness_factor, interval, repetitions, next_review_date, created_at, updated_at`)
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
 
@@ -128,8 +118,8 @@ export const FlashcardList: React.FC = () => {
                     </div>
                   </div>
                   <div className="mt-4 flex items-center text-sm text-gray-500">
-                    <span className="mr-4">Collection: {flashcard.collections?.name || "None"}</span>
-                    <span>Category: {flashcard.categories?.name || "None"}</span>
+                    <span className="mr-4">Collection: {flashcard.collection_id}</span>
+                    <span>Category: {flashcard.category_id || "None"}</span>
                   </div>
                 </div>
               </div>

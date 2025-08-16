@@ -12,7 +12,7 @@ type DatabaseCollectionInsert = Database["public"]["Tables"]["collections"]["Ins
 type DatabaseCollectionUpdate = Database["public"]["Tables"]["collections"]["Update"];
 
 export class CollectionsService {
-  constructor(private supabase: SupabaseClient<Database>) {}
+  constructor(private supabase: SupabaseClient) {}
 
   /**
    * Get all collections for authenticated user with pagination
@@ -55,7 +55,7 @@ export class CollectionsService {
       }
 
       // Transform data to DTOs
-      const collections: CollectionDTO[] = (data || []).map((collection) => ({
+      const collections: CollectionDTO[] = (data || []).map((collection: any) => ({
         id: collection.id,
         name: collection.name,
         description: collection.description,

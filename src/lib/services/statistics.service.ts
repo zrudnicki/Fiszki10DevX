@@ -12,10 +12,7 @@ import type {
  * Handles generation and learning statistics operations
  */
 export class StatisticsService {
-  constructor(
-    private supabase: SupabaseClient<Database>,
-    private userId: string
-  ) {}
+  constructor(private supabase: SupabaseClient, private userId: string) {}
 
   /**
    * Get AI generation statistics for the user

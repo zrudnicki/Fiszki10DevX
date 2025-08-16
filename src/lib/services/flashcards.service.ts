@@ -102,6 +102,8 @@ export class FlashcardsService {
           total: count || 0,
           limit,
           offset,
+          has_next: (count || 0) > offset + flashcards.length,
+          has_prev: offset > 0,
         },
       };
     } catch (error) {
