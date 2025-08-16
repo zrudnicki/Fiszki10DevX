@@ -14,6 +14,7 @@ Fiszki10DevX is a modern flashcard application designed for efficient learning t
 - **Testing (E2E)**: [Playwright](https://playwright.dev/)
 - **API Testing**: [Supertest](https://github.com/ladjs/supertest)
 - **API/Frontend Mocking**: [MSW](https://mswjs.io/)
+- **CI/CD**: GitHub Actions (build, typecheck, lint, and deploy to GitHub Pages)
 
 ## Project Structure
 
