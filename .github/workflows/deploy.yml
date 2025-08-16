@@ -41,6 +41,7 @@ jobs:
         run: npm run build
 
       - name: Setup GitHub Pages
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: actions/configure-pages@v5
         with:
           enablement: true
@@ -53,10 +54,15 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
+        if: ${{ github.ref == 'refs/heads/main' }}
         id: deployment
         uses: actions/deploy-pages@v4
