@@ -1,10 +1,12 @@
 import { describe, it, expect, vi } from "vitest";
-import { render } from "@testing-library/react";
+import { render, act } from "@testing-library/react";
 import React from "react";
+import { AuthProviderMock } from "./mocks/AuthProviderMock";
 
 vi.mock("@/db/supabase", () => ({ supabase: {} }));
 
-const getCategoriesMock = vi.fn();
+// Mock service to return a promise that never resolves to keep loading state
+const getCategoriesMock = vi.fn().mockImplementation(() => new Promise(() => {}));
 vi.mock("@/lib/services/categories.service", () => ({
   CategoriesService: vi.fn().mockImplementation(() => ({
     getCategories: getCategoriesMock,
@@ -13,11 +15,37 @@ vi.mock("@/lib/services/categories.service", () => ({
 
 describe("CategoriesList - loading", () => {
   it("pokazuje spinner ładowania gdy authLoading lub isLoading", async () => {
-    // authLoading = true
-    vi.doMock("../../hooks/useAuth", () => ({ useAuth: () => ({ user: { id: "user-1" }, isLoading: true }) }));
-    vi.doMock("@/components/hooks/useAuth", () => ({ useAuth: () => ({ user: { id: "user-1" }, isLoading: true }) }));
+    // Mock AuthProviderMock to show loading state
+    const AuthProviderWithLoading: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+      <AuthProviderMock isLoading={true}>{children}</AuthProviderMock>
+    );
+
     const { CategoriesList } = await import("../CategoriesList");
-    const { container } = render(<CategoriesList />);
-    expect(container.querySelector(".animate-spin")).not.toBeNull();
+    
+    let container: HTMLElement;
+    await act(async () => {
+      const result = render(
+        <AuthProviderWithLoading>
+          <CategoriesList />
+        </AuthProviderWithLoading>
+      );
+      container = result.container;
+    });
+
+    // Should show spinner because authLoading is true
+    expect(container!.querySelector(".animate-spin")).not.toBeNull();
+
+    // Now test with authLoading=false but isLoading=true
+    await act(async () => {
+      const result = render(
+        <AuthProviderMock>
+          <CategoriesList />
+        </AuthProviderMock>
+      );
+      container = result.container;
+    });
+
+    // Should show spinner because getCategories never resolves
+    expect(container!.querySelector(".animate-spin")).not.toBeNull();
   });
 });

@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-
 import type { CategoryDTO } from "@/types/dto.types";
+import { AuthProviderMock, mockUser } from "./mocks/AuthProviderMock";
 
 vi.mock("@/db/supabase", () => ({ supabase: {} }));
 
@@ -19,7 +19,8 @@ describe("CategoryTableRow delete - cancel", () => {
     const user = userEvent.setup();
     const { CategoryTableRow } = await import("../CategoryTableRow");
 
-    vi.spyOn(window, "confirm").mockImplementation(() => false);
+    // Mock confirm dialog to return false (cancel)
+    vi.spyOn(window, "confirm").mockReturnValue(false);
 
     const cat: CategoryDTO = {
       id: "c1",
@@ -31,11 +32,13 @@ describe("CategoryTableRow delete - cancel", () => {
     const onDelete = vi.fn();
 
     render(
-      <table>
-        <tbody>
-          <CategoryTableRow category={cat} onDelete={onDelete} />
-        </tbody>
-      </table>
+      <AuthProviderMock>
+        <table>
+          <tbody>
+            <CategoryTableRow category={cat} onDelete={onDelete} />
+          </tbody>
+        </table>
+      </AuthProviderMock>
     );
 
     const row = screen.getByRole("row");
