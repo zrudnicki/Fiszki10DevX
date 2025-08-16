@@ -7,7 +7,7 @@ import type { APIError } from "../../types/dto.types";
  */
 export async function getAuthenticatedUser(context: APIContext) {
   // First try to get user from locals (server-side session)
-  let user = context.locals.user;
+  let user = (context as any).locals?.user;
 
   // If no user in locals, try to get from Authorization header
   if (!user) {
@@ -18,7 +18,7 @@ export async function getAuthenticatedUser(context: APIContext) {
         const {
           data: { user: tokenUser },
           error,
-        } = await context.locals.supabase.auth.getUser(token);
+        } = await (context as any).locals?.supabase.auth.getUser(token);
         if (!error && tokenUser) {
           user = tokenUser;
         }
@@ -47,10 +47,10 @@ export async function getAuthenticatedSupabaseClient(context: APIContext) {
       const {
         data: { user },
         error,
-      } = await context.locals.supabase.auth.getUser(token);
+      } = await (context as any).locals?.supabase.auth.getUser(token);
       if (error || !user) {
         console.warn("Invalid token for Supabase client:", error);
-        return context.locals.supabase;
+        return (context as any).locals?.supabase;
       }
 
       // Create a new Supabase client with the access token
@@ -60,7 +60,7 @@ export async function getAuthenticatedSupabaseClient(context: APIContext) {
 
       if (!supabaseUrl || !supabaseAnonKey) {
         console.warn("Missing Supabase environment variables");
-        return context.locals.supabase;
+        return (context as any).locals?.supabase;
       }
 
       const authenticatedClient = createClient(supabaseUrl, supabaseAnonKey, {
@@ -78,7 +78,7 @@ export async function getAuthenticatedSupabaseClient(context: APIContext) {
   }
 
   // Return the original client if no token or setup failed
-  return context.locals.supabase;
+  return (context as any).locals?.supabase;
 }
 
 /**
@@ -111,14 +111,15 @@ export function createErrorResponse(status: number, error: string, message?: str
  * Custom API Response Error class
  */
 export class APIResponseError extends Error {
-  constructor(
-    public status: number,
-    public error: string,
-    public message?: string,
-    public details?: unknown
-  ) {
+  public status: number;
+  public error: string;
+  public details?: unknown;
+  constructor(status: number, error: string, message?: string, details?: unknown) {
     super(message || error);
     this.name = "APIResponseError";
+    this.status = status;
+    this.error = error;
+    this.details = details;
   }
 
   toResponse(): Response {

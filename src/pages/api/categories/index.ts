@@ -70,7 +70,7 @@ async function handleCreateCategory(context: { request: Request }, service: Cate
   const requestData = await parseJSONBody(request, createCategorySchema);
 
   // Create category via service
-  const result = await service.createCategory(userId, requestData);
+  const result = await service.createCategory({ name: requestData.name, user_id: userId });
 
   return createJSONResponse(result, 201);
 }

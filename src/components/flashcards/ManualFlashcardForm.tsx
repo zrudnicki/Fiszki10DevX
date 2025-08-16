@@ -28,7 +28,16 @@ export const ManualFlashcardForm: React.FC<ManualFlashcardFormProps> = () => {
           .eq("user_id", user.id);
 
         if (collectionsError) throw collectionsError;
-        setCollections(collectionsData || []);
+        setCollections(
+          (collectionsData || []).map((c) => ({
+            id: c.id,
+            name: c.name,
+            description: c.description,
+            flashcard_count: 0,
+            created_at: c.created_at,
+            updated_at: c.updated_at,
+          }))
+        );
 
         // Fetch categories
         const { data: categoriesData, error: categoriesError } = await supabase
@@ -37,7 +46,15 @@ export const ManualFlashcardForm: React.FC<ManualFlashcardFormProps> = () => {
           .eq("user_id", user.id);
 
         if (categoriesError) throw categoriesError;
-        setCategories(categoriesData || []);
+        setCategories(
+          (categoriesData || []).map((c) => ({
+            id: c.id,
+            name: c.name,
+            flashcard_count: 0,
+            created_at: c.created_at,
+            updated_at: c.updated_at,
+          }))
+        );
       } catch (err) {
         setError("Failed to load collections and categories");
         console.error(err);

@@ -3,15 +3,15 @@ import { supabase } from "../db/supabase";
 
 export const onRequest = defineMiddleware(async (context, next) => {
   // Add Supabase client to locals for API endpoints
-  context.locals.supabase = supabase;
+  (context.locals as any).supabase = supabase;
 
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
   // Add auth data to locals
-  context.locals.session = session;
-  context.locals.user = session?.user ?? null;
+  (context.locals as any).session = session;
+  (context.locals as any).user = session?.user ?? null;
 
   // Handle API routes differently from page routes
   const isAPIRoute = context.url.pathname.startsWith("/api/");

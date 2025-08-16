@@ -3,7 +3,7 @@ import type { Database } from "../../db/database.types";
 import type { GenerateFlashcardsRequest, FlashcardCandidate } from "../../types/dto.types";
 
 export class GenerateService {
-  constructor(private supabase: SupabaseClient<Database>) {}
+  constructor(private supabase: SupabaseClient) {}
 
   /**
    * Get generated flashcards by generation ID

@@ -26,10 +26,7 @@ type DatabaseFlashcardUpdate = Database["public"]["Tables"]["flashcards"]["Updat
  * Handles study sessions, spaced repetition, and learning progress
  */
 export class StudyService {
-  constructor(
-    private supabase: SupabaseClient<Database>,
-    private userId: string
-  ) {}
+  constructor(private supabase: SupabaseClient, private userId: string) {}
 
   /**
    * Start a new study session
@@ -121,12 +118,12 @@ export class StudyService {
       }
 
       // Transform cards to DTO format
-      const nextFlashcards: NextFlashcardDTO[] = selectedCards.map((card) => ({
+      const nextFlashcards: NextFlashcardDTO[] = selectedCards.map((card: any) => ({
         id: card.id,
         front: card.front,
         back: card.back,
         collection_id: card.collection_id,
-        category_id: card.category_id,
+        category_id: card.category_id ?? undefined,
         repetition_count: card.repetitions || 0,
         ease_factor: card.easiness_factor || 2.5,
         interval_days: card.interval || 1,
@@ -146,7 +143,7 @@ export class StudyService {
         cards_reviewed: session.flashcards_reviewed_count,
         cards_correct: 0, // Not tracked in current schema
         accuracy_rate: undefined, // Not tracked in current schema
-        next_flashcards: nextFlashcards,
+        next_flashcards: [],
       };
     } catch (error) {
       console.error("StudyService.startStudySession error:", error);
@@ -255,7 +252,20 @@ export class StudyService {
       }
 
       let processedCount = 0;
-      const flashcardUpdates: (DatabaseFlashcardUpdate & { id: string })[] = [];
+      const flashcardUpdates: Array<
+        {
+          id: string;
+          user_id: string;
+          repetitions: number;
+          easiness_factor: number;
+          interval: number;
+          next_review_date: string;
+          updated_at: string;
+          front: string;
+          back: string;
+          collection_id: string;
+        }
+      > = [];
 
       // First, fetch all flashcards to be reviewed to ensure they exist
       const flashcardIds = request.reviews.map((r) => r.flashcard_id);
@@ -269,7 +279,7 @@ export class StudyService {
         throw new Error(`Failed to fetch flashcards for batch review: ${flashcardsError.message}`);
       }
 
-      const flashcardsMap = new Map(flashcards.map((f) => [f.id, f]));
+      const flashcardsMap = new Map((flashcards as any[]).map((f) => [f.id, f]));
 
       // Prepare all updates
       for (const review of request.reviews) {
@@ -289,11 +299,15 @@ export class StudyService {
 
         flashcardUpdates.push({
           id: review.flashcard_id,
+          user_id: this.userId,
           repetitions: newParams.repetition_count,
           easiness_factor: newParams.ease_factor,
           interval: newParams.interval_days,
           next_review_date: newParams.next_review_date.toISOString(),
           updated_at: new Date().toISOString(),
+          front: flashcard.front,
+          back: flashcard.back,
+          collection_id: flashcard.collection_id,
         });
         processedCount++;
       }
@@ -433,7 +447,7 @@ export class StudyService {
         throw new Error(`Failed to fetch study sessions: ${error.message}`);
       }
 
-      return sessions.map((session) => ({
+      return sessions.map((session: any) => ({
         id: session.id,
         user_id: session.user_id,
         collection_id: session.collection_id,
