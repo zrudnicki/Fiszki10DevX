@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, act } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import React from "react";
 import { AuthProviderMock } from "./mocks/AuthProviderMock";
 
@@ -26,30 +26,19 @@ describe("CategoriesList - loading", () => {
     );
 
     const { CategoriesList } = await import("../CategoriesList");
-    let container: HTMLElement | null = null;
-    await act(async () => {
-      const result = render(
-        <AuthProviderWithLoading>
-          <CategoriesList />
-        </AuthProviderWithLoading>
-      );
-      container = result.container;
-    });
 
-    // Should show spinner because authLoading is true
-    expect(container?.querySelector(".animate-spin")).not.toBeNull();
+    const first = render(
+      <AuthProviderWithLoading>
+        <CategoriesList />
+      </AuthProviderWithLoading>
+    );
+    expect(first.container.querySelector(".animate-spin")).not.toBeNull();
 
-    // Now test with authLoading=false but isLoading=true
-    await act(async () => {
-      const result = render(
-        <AuthProviderMock>
-          <CategoriesList />
-        </AuthProviderMock>
-      );
-      container = result.container;
-    });
-
-    // Should show spinner because getCategories never resolves
-    expect(container?.querySelector(".animate-spin")).not.toBeNull();
+    const second = render(
+      <AuthProviderMock>
+        <CategoriesList />
+      </AuthProviderMock>
+    );
+    expect(second.container.querySelector(".animate-spin")).not.toBeNull();
   });
 });
