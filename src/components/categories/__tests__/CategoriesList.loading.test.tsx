@@ -6,9 +6,12 @@ import { AuthProviderMock } from "./mocks/AuthProviderMock";
 vi.mock("@/db/supabase", () => ({ supabase: {} }));
 
 // Mock service to return a promise that never resolves to keep loading state
-const getCategoriesMock = vi
-  .fn()
-  .mockImplementation(() => new Promise(() => { /* keep pending */ void 0; }));
+const getCategoriesMock = vi.fn().mockImplementation(
+  () =>
+    new Promise(() => {
+      /* keep pending */ void 0;
+    })
+);
 vi.mock("@/lib/services/categories.service", () => ({
   CategoriesService: vi.fn().mockImplementation(() => ({
     getCategories: getCategoriesMock,
