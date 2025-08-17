@@ -65,7 +65,7 @@ jobs:
 
       - name: Install root dependencies
         run: npm ci
-        
+
       - name: Build Astro site
         env:
           PUBLIC_ENV_NAME: ${{ secrets.PUBLIC_ENV_NAME }}
@@ -99,9 +99,6 @@ jobs:
 
       - name: Install root dependencies
         run: npm ci
-
-      - name: Generate preparedRules.json
-        run: npm run generate-rules # Assuming direct execution works
 
       - name: Install worker dependencies
         run: cd mcp-server && npm ci
