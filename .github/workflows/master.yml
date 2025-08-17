@@ -21,7 +21,7 @@ jobs:
         run: npm ci
 
       - name: Run linting
-        run: npm run lint
+        run: npm run lint:ci
 
   unit-test:
     name: Unit Tests
@@ -65,10 +65,7 @@ jobs:
 
       - name: Install root dependencies
         run: npm ci
-
-      - name: Generate preparedRules.json
-        run: npm run generate-rules # Assuming direct execution works
-
+        
       - name: Build Astro site
         env:
           PUBLIC_ENV_NAME: ${{ secrets.PUBLIC_ENV_NAME }}
