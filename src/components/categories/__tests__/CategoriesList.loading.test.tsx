@@ -26,7 +26,7 @@ describe("CategoriesList - loading", () => {
     );
 
     const { CategoriesList } = await import("../CategoriesList");
-    let container: HTMLElement;
+    let container: HTMLElement | null = null;
     await act(async () => {
       const result = render(
         <AuthProviderWithLoading>
