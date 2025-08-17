@@ -6,7 +6,9 @@ import { AuthProviderMock } from "./mocks/AuthProviderMock";
 vi.mock("@/db/supabase", () => ({ supabase: {} }));
 
 // Mock service to return a promise that never resolves to keep loading state
-const getCategoriesMock = vi.fn().mockImplementation(() => new Promise(() => {}));
+const getCategoriesMock = vi
+  .fn()
+  .mockImplementation(() => new Promise(() => { /* keep pending */ void 0; }));
 vi.mock("@/lib/services/categories.service", () => ({
   CategoriesService: vi.fn().mockImplementation(() => ({
     getCategories: getCategoriesMock,
@@ -21,7 +23,6 @@ describe("CategoriesList - loading", () => {
     );
 
     const { CategoriesList } = await import("../CategoriesList");
-    
     let container: HTMLElement;
     await act(async () => {
       const result = render(
@@ -33,7 +34,7 @@ describe("CategoriesList - loading", () => {
     });
 
     // Should show spinner because authLoading is true
-    expect(container!.querySelector(".animate-spin")).not.toBeNull();
+    expect(container?.querySelector(".animate-spin")).not.toBeNull();
 
     // Now test with authLoading=false but isLoading=true
     await act(async () => {
@@ -46,6 +47,6 @@ describe("CategoriesList - loading", () => {
     });
 
     // Should show spinner because getCategories never resolves
-    expect(container!.querySelector(".animate-spin")).not.toBeNull();
+    expect(container?.querySelector(".animate-spin")).not.toBeNull();
   });
 });
