@@ -3,7 +3,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import type { CategoryDTO } from "@/types/dto.types";
-import { AuthProviderMock, mockUser } from "./mocks/AuthProviderMock";
+import { AuthProviderMock } from "./mocks/AuthProviderMock";
 
 vi.mock("@/db/supabase", () => ({ supabase: {} }));
 
