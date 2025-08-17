@@ -1,0 +1,118 @@
+name: Deploy to Cloudflare Pages (Production)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint:check
+
+  unit-test:
+    name: Unit Tests
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test # Using npm run test as requested
+
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: [lint, unit-test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write # Needed for cloudflare/wrangler-action
+    environment:
+      name: github-pages # Assuming a 'github-pages' environment for secrets
+      url: ${{ steps.deployment.outputs.url }} # Output the deployment URL
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Generate preparedRules.json
+        run: npm run generate-rules # Assuming direct execution works
+
+      - name: Build Astro site
+        env:
+          PUBLIC_ENV_NAME: ${{ secrets.PUBLIC_ENV_NAME }}
+          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
+        run: npm run build # This should create the dist/ directory
+
+      - name: Deploy to Cloudflare Pages
+        id: deployment
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }} # Secret needed for Cloudflare API
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }} # Secret needed for Cloudflare Account ID
+          command: pages deploy dist --project-name='ai-rules-builder' # Use the command input
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }} # Optional: Adds commit details to deployments
+
+  deploy-mcp-worker:
+    name: Deploy Worker (mcp-server)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # We need Node.js to generate rules and run wrangler/npm
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc' # Assuming .nvmrc is in the root
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json' # Cache npm deps for root and worker
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Generate preparedRules.json
+        run: npm run generate-rules # Assuming direct execution works
+
+      - name: Install worker dependencies
+        run: cd mcp-server && npm ci
+
+      - name: Deploy Worker (mcp-server)
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_WORKER_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: './mcp-server'
+          command: deploy
